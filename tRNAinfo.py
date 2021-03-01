@@ -4,8 +4,6 @@ and on converting between sprinzl and string index position; and on the first
 modification in each modification pathway
 
 """
-
-
 modomics2orig = {'τ': 'C', 'F': 'U', '∨': 'G', '∞': 'A', 'ς': 'G', '4': 'U', 'α': 'U', 'ν': 'C', '`': 'A', '℘': 'U',
                  'T': 'U', 'R': 'G', 'D': 'U', 'μ': 'C', 'E': 'A', 'ρ': 'U', '?': 'C', '√': 'A', '^': 'A', 'Ê': 'U', 
                  'K': 'G', ')': 'U', 'Î': '', 'O': 'A', '1': 'U', '#': 'G', '~': 'U', 'Y': 'G', '>': 'C', 'œ': 'A', 
