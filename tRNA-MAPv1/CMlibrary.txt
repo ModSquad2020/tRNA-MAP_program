@@ -1,3 +1,0 @@
-mod_short_name	sprinzl_position	reference_base	domain	positive_cm	negative_cm	description
-s4U	8	T	Bacteria	./tRNA-MAP.db/all_s4U-s4U_T8_AA_AC_D_V-pos.cm	./tRNA-MAP.db/all_s4U-s4U_T8_AA_AC_D_V-neg.cm	built using all 5 training species, with jackknifing
-m7G	46	G	Bacteria	./tRNA-MAP.db/all_sp_m7G-m7G_G46_D_T_V-pos.cm	./tRNA-MAP.db/all_sp_m7G-m7G_G46_D_T_V-neg.cm	built with E. coli, B. subtilis, M. capricolum, L. lactis, with no jackknife step
