@@ -1,0 +1,108 @@
+#!/usr/bin/perl -w
+
+# tRNA_sprinzl_pos
+# Align tRNAs in Sprinzl positioning
+#
+# Copyright 2015
+# Patricia Chan, Ph.D.
+# Department of Biomolecular Engineering
+# University of California Santa Cruz
+
+use strict;
+use lib ".";
+use Getopt::Long;
+
+use tRNAscanSE::tRNA;
+use tRNAscanSE::SprinzlPos;
+use tRNAscanSE::SprinzlAlign;
+use tRNAscanSE::Configuration;
+use tRNAscanSE::ArraytRNA;
+use tRNAscanSE::ResultFileReader;
+use tRNAscanSE::SprinzlAlignResults;
+
+
+our ($opt_ss, $opt_clade, $opt_output, $opt_conf, $opt_help);
+our $global_constants = tRNAscanSE::Configuration->new();
+our $log = tRNAscanSE::LogFile->new("default");
+our $sprinzl = tRNAscanSE::SprinzlPos->new();
+our $tRNAs = tRNAscanSE::ArraytRNA->new();
+our %options = ();
+
+&set_options();
+$log->initialize_log("tRNA_sprinzl_pos", $opt_output, &get_command_arguments());
+
+our %global_vars = (global_constants => $global_constants,
+                    sprinzl => $sprinzl,
+                    tRNAs => $tRNAs,
+					log_file => $log,
+					options => \%options
+                   );
+
+&process();
+
+$log->finish_process();
+
+exit;
+
+sub set_options
+{
+	$opt_ss = "";
+	$opt_clade = "";
+	$opt_output = "";
+	$opt_conf = "";
+	
+	Getopt::Long::GetOptions("ss|s=s", "clade|d=s", "output|o=s", "conf|c=s", "help|h");
+	
+	if ($opt_help || $opt_ss eq "" || $opt_clade eq "" || $opt_output eq "")
+	{
+		die "Usage: tRNA_sprinzl_pos [options]\n",
+			"Options\n",
+			"--clade -d <clade>  Clade of organism (Eukaryota, Archaea, Bacteria)\n",
+			"--ss -s <file>      tRNAscan-SE secondary structure output\n",
+			"--output -o <dir>   Directory where output files will be written\n",
+			"--config -c <file>  Configuration file name (default=\$HOME/map-sprinzl-pos.conf)\n",
+			"--help -h           Print this help\n\n";
+	}
+
+	$options{ss} = $opt_ss;
+	$options{clade} = $opt_clade;
+	$options{output} = $opt_output;
+
+	if ($opt_conf ne "")
+	{
+		$global_constants->config_file($opt_conf);
+	}
+	else
+	{
+		$global_constants->config_file($ENV{HOME}."/map-sprinzl-pos.conf");
+	}
+	$global_constants->read_configuration_file();
+}
+
+sub get_command_arguments
+{
+    my $line = "tRNA_sprinzl_pos";
+    
+    $line .= " --conf ".$opt_conf if ($opt_conf ne "");
+    $line .= " --clade ".$opt_clade if ($opt_clade ne "");
+    $line .= " --ss ".$opt_ss if ($opt_ss ne "");
+    $line .= " --output ".$opt_output if ($opt_output ne "");
+	
+	return $line;
+}
+
+sub process
+{
+	&read_ss_file(\%global_vars, $options{ss});
+	$log->status("Find ".$tRNAs->get_count()." tRNAs");
+	for (my $i = 0; $i < $tRNAs->get_count(); $i++)
+	{
+		my $tRNA = $tRNAs->get($i);
+
+		$log->status("Align tRNA to Sprinzl positioning: ".$tRNA->tRNAscan_id());
+		&do_sprinzl_pos(\%global_vars, $tRNA, $options{clade});
+		
+		my $output_file = $options{output}."/".$tRNA->tRNAscan_id().".pos";
+		&write_sprinzl_pos(\%global_vars, $output_file, $tRNA);
+	}
+}

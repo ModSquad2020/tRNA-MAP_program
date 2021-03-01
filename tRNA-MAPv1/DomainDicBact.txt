@@ -1,0 +1,74 @@
+Modification	Enzyme	Domain	Position		
+cmo5U	CmoA	Methyltransf_25	34		
+mcmo5U	CmoA	Methyltransf_25	34		
+cmo5U	CmoB	Methyltransf_9	34		
+mcmo5U	CmoB	Methyltransf_10	34		
+D	DusA	Dus	20		
+D	DusB	Dus	16		
+D	DusB	Dus	20		
+D	DusB	Dus	17		
+D	DusB	Dus	20a		
+D	DusC	Dus	20		
+D	DusC	Dus	16		
+D	DusC	Dus	17		
+D	DusC	Dus	20a		
+gluQtRNA	GluQRS	unknown	34		
+i6A	MiaA	tRNA-synt_1c	37		
+ms2i6A	MiaB	Radical_SAM	37		
+ms2i6A	MiaB	TRAM	37		
+ms2i6A	MiaB	UPF0004	37		
+s2U	MnmA	unknown	34		
+mnm5s2U	MnmA	unknown	34		
+"mnm5s2U, mnm5U"	MnmCD	DAO	34		
+"mnm5s2U, mnm5U"	MnmCD	Methyltransf_30	34		
+"mnm5U, mnm5s2U, cmnm5Um, cmnm5s2U"	MnmE	MnmE_helical	34		
+"mnm5U, mnm5s2U, cmnm5Um, cmnm5s2U"	MnmE	MMR_HSR1	34		
+"mnm5U, mnm5s2U, cmnm5Um cmnm5s2U"	MnmE	TrmE_N	34		
+"mnm5U, mnm5s2U, cmnm5Um, cmnm5s2U"	MnmG	GIDA	34		
+"mnm5U, mnm5s2U, cmnm5Um, cmnm5s2U"	MnmG	GIDA_assoc	34		
+cmnm5ges2U	MnmH	unknown	34		
+mnm5se2U	MnmH	unknown	34		
+mnm5ges2U	MnmH	unknown	34		
+QtRNA	QueA	Queuosine_synth	34		
+QtRNA	QueF	QueF	34		
+QtRNA	QueF	QueF_N	34		
+QtRNA	QueG	DUF1730	34		
+m2A	RlmN	Radical_SAM	37		
+Y	RluA	PseudoU_synth_2	32		
+I	TadA	MafB19-deam	34		
+ct6A	TcdA	ThiF	37		
+QtRNA	Tgt	TGT	34		
+s4U	ThiI	ThiI	8		
+s4U	ThiI	THUMP	8		
+k2C	TilS	ATP_bind_3	34		
+k2C	TilS	TilS	34		
+k2C	TilS	TilS_C	34		
+ac4C	TmcA	DUF1726	34		
+ac4C	TmcA	GNAT_acetyltr_2	34		
+ac4C	TmcA	Helicase_RecD	34		
+ac4C	TmcA	tRNA_bind_3	34		
+m5U	TrmA	tRNA_U5-meth_tr	54		
+m7G	TrmB	Methyltransf_4	46		
+m1G	TrmD	tRNA_m1G_MT	37		
+Gm	TrmH	SpoU_methylas_C	18		
+Gm	TrmH	SpoU_methylase	18		
+Um	TrmJ	SpoU_methylase	32		
+Cm	TrmJ	SpoU_methylase	32		
+Cm	TrmL	SpoU_methylase	34		
+cmnm5Um	TrmL	SpoU_methylase	34		
+m6A	TrmM	MTS	37		
+m6t6A	TrmO	TrmO	37		
+m6t6A	TrmO	TrmO_C	37		
+Y	TruA	PseudoU_synth_1	38		
+Y	TruA	PseudoU_synth_1	39		
+Y	TruA	PseudoU_synth_1	40		
+Y	TruB	TruB-C_2	55		
+Y	TruB	TruB_C_2	55		
+Y	TruB	TruB_N	55		
+Y	TruC	PseudoU_synth_2	65		
+Y	TruD	TruD	13		
+t6A	TsaB	TsaD	37		
+t6A	TsaC	Sua5_yciO_yrdC	37		
+t6A	TsaD	TsaD	37		
+t6A	TsaE	TsaE	37		
+s2C	TtcA	ATP_bind_3	32		

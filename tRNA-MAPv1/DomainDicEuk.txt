@@ -1,0 +1,50 @@
+Modification	Enzyme	Domain	Position
+t6A	Bud32	Kdo	37
+Y	Cbf5	"DKCLD, PUA, TruB_C_2, TruB_N_"	
+Y	Cgi121	CGI-121_	37
+D	Dus1	Dus 	"16,17"
+D	Dus2	Dus 	20
+D	Dus3	Dus 	47
+D	Dus4	Dus 	20
+i6A	Mod5	IPPTÊ(PF01715)	37
+t6A	Pcc1	Pcc1	37
+Y	Pus1	PseudoU_synth_1	"27, 28, 34, 35, 36"
+Y	Pus2	PseudoU_synth_1	27
+Y	Pus3	PseudoU_synth_1	"38,39"
+Y	Pus4	TruB_N	55
+Y	Pus6	PseudoU_synth_2	31
+Y	Pus7	TruD	"13, 35"
+Y	Pus8	PseudoU_synth_2	32
+Y	Pus9	PseudoU_synth_2	32
+t6A	Qri7	TsaD	37
+Ar(p)	Rit1	"Init_tRNA_PT, Rit1_C_"	64
+ac4C	Rra1	"GNAT_acetyltr_2_,  tRNA_bind_2_"	12
+t6A	Sua5	"SUA5, Sua5_yciO_yrdC"	37
+m1l	Tad1	A_deamin	37
+I	Tad2	dCMP_cyt_deam_1	34
+I	Tad3	dCMP_cyt_deam_1	34
+ac4C	Tan1	THUMP	12
+G	Thg1	"Thg1, Thg1C"	0
+m22G	Trm1	TRM_	26
+m1G	Trm10	tRNA_m1G_MT	9
+m2G	Trm11	UPF0020	10
+"Cm, Am"	Trm13	"TRM13,  zf-TRM13_CCCH, zf-U11-48K_"	4
+m3C	Trm140	Methyltransf_12_	32
+m5U	Trm2	"TRAM, tRNA_U5-meth_tr"	54
+Gm	Trm3	SpoU_methylase	18
+m5C	Trm4	Methyltr_RsmB-F	"37, 40, 48"
+Um	Trm44	AdoMet_Mtase	44
+"m1l, yW, m1G"	Trm5	Met_10	37
+m1A	Trm61	GCD14	58
+Cm	Trm7	FtsJ	32
+"Gm, ncm5Um"	Trm7	FtsJ	34
+m7G	Trm8	Methyltransf_4	46
+"mcm5s2U, mcm5U"	Trm9	Methyltransf_11	34
+yW	TYW1	"Flavodoxin_1_, Radical_SAM, Wyosine_form_ "	37
+yW	TYW2	Met_10_	37
+yW	TYW3	TYW3	37
+yW	TYW4	LCM	37
+cmnm5s2U	Mto1	"GIDA, GIDA_assoc_"	34
+cmnm5s2U	Mtu1		34
+mcm5s2U	Ncs2		34
+cmnm5s2U	Ncs6		34
