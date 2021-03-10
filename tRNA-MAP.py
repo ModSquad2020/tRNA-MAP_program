@@ -23,20 +23,22 @@ def parseInput():
     argParser.add_argument('-s', '--tRNAscan_ss', required = True, help = 'list of tRNAscan-SE secondary structure file paths')
     argParser.add_argument('-o', '--output_directory', required = True, help = 'Path to output results')
     argParser.add_argument('-k', '--kingdom', required = True, choices = {'E', 'A', 'B'}, help = 'Domain of organism')
-    argParser.add_argument('-d', '--database', required = False, default = './CMlibrary.txt', help = 'File containing information about tRNA mod CMs to search')
+    argParser.add_argument('--cm_database', required = False, default = './CMlibrary.txt', help = 'File containing information about tRNA mod CMs to search')
+    argParser.add_argument('--prob_database', required = False, default = './probLibrary.txt', help = 'File containing information about tRNA mod CMs to search')
     argParser.add_argument('--skip_sprinzl_align', required = False, action = 'store_true', help = 'Skips sprinzl alignment step to save time if this has already been done.')
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     
     #'-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_predictions -k B'.split()
-    clArgs = argParser.parse_args()
+    clArgs = argParser.parse_args('-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test -k B'.split())
     tRNAstruct = clArgs.tRNAscan_ss
     orgKing = kingdoms[clArgs.kingdom]
-    outfile = clArgs.output_directory
-    cmFile = clArgs.database
+    outDir = clArgs.output_directory
+    cmFile = clArgs.cm_database
+    probFile = clArgs.prob_database
     skipSprinzl = clArgs.skip_sprinzl_align
     
-    return tRNAstruct, orgKing, outfile, cmFile, skipSprinzl
+    return tRNAstruct, orgKing, outDir, cmFile, probFile, skipSprinzl
 
 def sortPositions(inputFile):
     """Read tRNA sprinzl position file"""
@@ -261,67 +263,73 @@ def nameIsodecoders(inputFile):
     
     return isoacceptors, isoFastaDict, scanNameToIsoName
     
-def writeOutput(callsFile, scoreFile, preds, isos, searchedMods, modPositions, nameMap):
-    """Sort isodecoders based on MODOMICS input file"""
-    from tRNAinfo import sprinzl2coords as s2c
+
+
+def parseProbs(inputFile):
+    """Parse conditional probability input file"""
     
-    with open(callsFile, 'w') as cF, open(scoreFile, 'w') as sF:
+    #Store conditional probabilities
+    probsDict = {}
+    
+    with open(inputFile, 'r') as inF:
+        lines = inF.readlines()
         
-        sprinzlPos = list(s2c.keys())[1:]
-        
-        cF.write('isoacceptor\t{0}\n'.format('\t'.join(sprinzlPos)))
-        sF.write('isoacceptor\t{0}\n'.format('\t'.join(sprinzlPos)))
-        
-        #reorder into isodecoder names
-        isoAlign = {}
-        for tRNA in isos.keys():
-            isoAlign[nameMap[tRNA.split('-')[0]]] = isos[tRNA]
-        
-        #Write results to file
-        for iso in isoAlign.keys():
-            cF.write('tRNA-{0}\t'.format(iso))
-            sF.write('tRNA-{0}\t'.format(iso))
+        for line in lines[1:]:
+            splitLine = line.strip().split('\t')
             
-            #Warn about abnormal length tRNAs:
-            if len(sprinzlPos) != len(isoAlign[iso].keys()):
-                print('Warning: tRNA-{0} is not the expected length; skipping gapped regions'.format(iso))
+            modLabel = '_'.join(splitLine[0:3])
+            residue = splitLine[3]
+            pos = splitLine[4]
+            posProb = float(splitLine[5])
+            negProb = float(splitLine[6])
             
-            
-            #Iterate through sprinzl positions
-            for pos in sprinzlPos:
-                
-                base = isoAlign[iso][pos]
-                
-                #calc mod odds score, call mod/unmod based on odds score
+            #Compile dictionary
+            try:
                 try:
-                    for mod in modPositions['_'.join([pos, base])]:
-                        
-                        #calculate mod score
-                        modScore = float(preds[mod]['posResults'][iso]) - float(preds[mod]['negResults'][iso])
-                        
-                        #get short name from sorting string
-                        shortName = mod.split('_')[0]
-                        
-                        #Write correct mod call
-                        if modScore > 0:
-                            cF.write('{0}\t'.format(shortName))
-                            sF.write('{0}\t'.format(modScore))
-                            
-                        else:
-                            cF.write('{0}\t'.format(base))
-                            sF.write('{0}\t'.format(modScore))
-                        
-                
-                #Write reference base if no modification available
+                    probsDict[modLabel][pos][residue] = [posProb, negProb]
                 except KeyError:
-                    cF.write('{0}\t'.format(base)) #Write base at unmodified position
-                    sF.write('-\t') #Denote no mod prediction at this spot
-                    
-            cF.write('\n')
-            sF.write('\n')
+                    probsDict[modLabel][pos] = {residue: [posProb, negProb]}
+                        
+            except KeyError:
+                probsDict[modLabel] = {pos: {residue: [posProb, negProb]}}
                 
-        cF.close()
-        sF.close()
+        inF.close()
+    
+    return probsDict
+    
+def assignProb(tRNAseqs, modInfo, probDict):
+    """Calculate conditional probabilities for anticodon modifications"""
+    import numpy as np
+    mod, refPos, refBase = modInfo.split('_')
+    
+    probs = {'modScore':{}}
+    
+    #Iterate through sequences
+    for iso in tRNAseqs.keys():
+        
+        seq = tRNAseqs[iso]
+        
+        #Iterate through interesting positions
+        #for pos in probDict.keys(): ##################################################################
+        #Figure out how to combine if multiple positions specified!!!!
+        pos = list(probDict.keys())[0]
+        
+        #Handle U vs T in different datasets
+        seqBase = seq[pos]
+        if seq[pos] == 'T':
+            seqBase = 'U'
+        
+        try:
+            #Get conditional probabilities for observed base
+            probs['modScore'][iso] = np.log2(probDict[pos][seqBase][0]/probDict[pos][seqBase][1])
+            
+        except KeyError:
+            if seqBase == '-':
+                pass
+            else:
+                print(pos, seqBase)
+          
+    return probs
         
 def main():
     """Execute commands"""
@@ -329,7 +337,7 @@ def main():
     
     #Recieve command line args
     #tRNAstruct, orgKing, outfile, sortFile , runFile
-    ssFile, domain, outputFile, cmsToSearch, skipSpr = parseInput()
+    ssFile, domain, outputFile, cmsToSearch, condProbs, skipSpr = parseInput()
     
     tempDir = '{0}/tmp'.format('/'.join(outputFile.split('/')))
     
@@ -348,16 +356,26 @@ def main():
     #Parse CM summary file
     allCMs, modInfo = parseSummary(cmsToSearch)
     
+    #Parse conditional probability file
+    probsDict = parseProbs(condProbs)
+    #Add to modInfo
+    for modTag in probsDict.keys():
+        try:
+            modInfo['_'.join(modTag.split('_')[1:])].append(modTag)
+        except KeyError:
+            modInfo['_'.join(modTag.split('_')[1:])] = [modTag]
+    
     #Store tRNA sequences
-    tRNAseq = dict() #Store tRNA sequences {species: {tRNAscan-SE ID: sequence}}
-    tRNApos = dict() #Store tRNA positions {species: {tRNAscan-SE ID:{sprinzl position: base}}}
-    isoDict = dict() #Store isodecoder sequences and respective tRNAscan-SE IDs {species: {sequence: [tRNAscan-SE ID]}}
+    tRNAseq = dict() #Store tRNA sequences {tRNAscan-SE ID: sequence}
+    tRNApos = dict() #Store tRNA positions {tRNAscan-SE ID:{sprinzl position: base}}
+    isoDict = dict() #Store isodecoder sequences and respective tRNAscan-SE IDs {sequence: [tRNAscan-SE ID]}
     
     #Store prediction statistics
     predStats = dict()
     
     #Store tRNA isodecoder names
     faDict = {}
+    isoPosDict = {}
     
     isoInfo, fastaSeqs, nameMap = nameIsodecoders(ssFile)
         
@@ -416,14 +434,15 @@ def main():
         for seq in isoDict.keys():
             for ID in isoDict[seq]:
                 faDict[nameMap[ID.split('-')[0]]] = seq
-            
+                isoPosDict[nameMap[ID.split('-')[0]]] = tRNApos[ID]
+        
         #Write modifiable sequences into fasta file for cmSearch
         faName = '{0}/{1}_{2}.fasta'.format(tempDir, refPos, refBase)
         writeFasta(faName, faDict)
             
         #Search sequences against fasta file
-        os.system('cmsearch --tblout {0}-{1}-hits.txt {2} {0}'.format(faName, allCMs[cm]['posCM'].split('/')[-1], allCMs[cm]['posCM']))
-        os.system('cmsearch --tblout {0}-{1}-hits.txt {2} {0}'.format(faName, allCMs[cm]['negCM'].split('/')[-1], allCMs[cm]['negCM']))
+        os.system('cmsearch -g --tblout {0}-{1}-hits.txt {2} {0}'.format(faName, allCMs[cm]['posCM'].split('/')[-1], allCMs[cm]['posCM']))
+        os.system('cmsearch -g --tblout {0}-{1}-hits.txt {2} {0}'.format(faName, allCMs[cm]['negCM'].split('/')[-1], allCMs[cm]['negCM']))
             
         #Handle when there is no results file (in the case that one CM has no sequences in it)
         try:
@@ -437,6 +456,12 @@ def main():
         except FileNotFoundError:
             print('Warning: negative search results file not found')
             negResults = dict()
+        
+        #Add anticodon-loop conditional probabilities
+        
+        for modTag in probsDict.keys():            
+            predResults[modTag] = assignProb(isoPosDict, modTag, probsDict[modTag])
+        
     
     #Output file labelling
             
@@ -445,6 +470,95 @@ def main():
     
     #write output file
     writeOutput(callFile, scoreFile, predResults, tRNApos, allCMs, modInfo, nameMap)
+
+def writeOutput(callsFile, scoreFile, preds, isos, searchedMods, modPositions, nameMap):
+    """Sort isodecoders based on MODOMICS input file"""
+    from tRNAinfo import sprinzl2coords as s2c
+    
+    with open(callsFile, 'w') as cF, open(scoreFile, 'w') as sF:
+        
+        sprinzlPos = list(s2c.keys())[1:]
+        
+        cF.write('isoacceptor\t{0}\n'.format('\t'.join(sprinzlPos)))
+        sF.write('isoacceptor\t{0}\n'.format('\t'.join(sprinzlPos)))
+        
+        #reorder into isodecoder names
+        isoAlign = {}
+        for tRNA in isos.keys():
+            isoAlign[nameMap[tRNA.split('-')[0]]] = isos[tRNA]
+        
+        #Write results to file
+        for iso in sorted(isoAlign.keys()):
+            cF.write('tRNA-{0}'.format(iso))
+            sF.write('tRNA-{0}'.format(iso))
+            
+            #Warn about abnormal length tRNAs:
+            if len(sprinzlPos) != len(isoAlign[iso].keys()):
+                print('Warning: tRNA-{0} is not the expected length; skipping gapped regions'.format(iso))
+            
+            #Iterate through sprinzl positions
+            for pos in sprinzlPos:
+                
+                base = isoAlign[iso][pos]
+                
+                #calc mod odds score, call mod/unmod based on odds score
+                try:
+                    
+                    modScores = [] #Store multiple scores if present
+                    modList = []
+                    for mod in modPositions['_'.join([pos, base])]:
+                        modScore = float()
+                        #calculate mod score
+                        if 'modScore' in preds[mod].keys():
+                            modScore = preds[mod]['modScore'][iso]
+                        else:
+                            modScore = float(preds[mod]['posResults'][iso]) - float(preds[mod]['negResults'][iso])
+                        
+                        #get short name from sorting string
+                        shortName = mod.split('_')[0]
+                        
+                        #Store multiple mod scores
+                        modScores.append(modScore)
+                        modList.append(shortName)
+                   
+                    ###################################################
+                    #Handle when multiple mods can occur at the same position -> Select the mod that has the highest score
+                    for mod, score in zip(modList, modScores):
+                        
+                        if score == max(modScores):
+                            
+                            if score > 0:
+                                
+                                cF.write('\t{0}'.format(mod))
+                                sF.write('\t{0}'.format(score))
+
+                            else:
+                                cF.write('\t{0}'.format(base))
+                                sF.write('\t{0}'.format(score))
+                        else:
+                            pass 
+                    
+                    
+                    
+                    #Write correct mod call
+                    #if modScore > 0:
+                     #   cF.write('\t{0}'.format(shortName))
+                      #  sF.write('\t{0}'.format(modScore))
+                            
+                    #else:
+                     #   cF.write('\t{0}'.format(base))
+                      #  sF.write('\t{0}'.format(modScore))
+                        
+                
+                #Write reference base if no modification available
+                except KeyError:
+                    cF.write('\t{0}'.format(base)) #Write base at unmodified position
+                    sF.write('\t-') #Denote no mod prediction at this spot
+                    
+            cF.write('\n')
+            sF.write('\n')
+                
+        cF.close()
+        sF.close()
     
 main()
-

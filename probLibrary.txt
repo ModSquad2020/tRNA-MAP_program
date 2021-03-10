@@ -1,0 +1,9 @@
+modification	position	unmodified_base	cond_position	cond_residue	cond_probability	cond_not_probability
+t6A	37	A	G	36	0.0	1.0
+t6A	37	A	U	36	0.75	0.25
+t6A	37	A	A	36	0.0	1.0
+t6A	37	A	C	36	0.03225806451612903	0.967741935483871
+i6A	37	A	G	36	0.0	1.0
+i6A	37	A	U	36	0.0	1.0
+i6A	37	A	A	36	0.7111111111111111	0.28888888888888886
+i6A	37	A	C	36	0.0	1.0
