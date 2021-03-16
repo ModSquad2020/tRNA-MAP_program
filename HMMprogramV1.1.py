@@ -37,12 +37,12 @@ def parseInput():
 
     return refKingdomType, refProteome, outFile, eValue
 
-def runHMMer(refProfileHMM, refProteome):
+def runHMMer(refKingdomType, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     if refKingdomType == 'B':
-        file_to_open = './DomainDicBact.txt' #updatepaths 
+        file_to_open = './BactProfileHMM.txt' #updatepaths 
     elif refKingdomType == 'E':
-        file_to_open = './DomainDicEuk.txt' #updatepaths
+        file_to_open = './EukProfileHMM.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
     
