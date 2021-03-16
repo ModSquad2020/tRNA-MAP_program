@@ -30,7 +30,7 @@ def parseInput():
     
     clArgs = argParser.parse_args()
 
-    refKingdomType = clArgs.kingdom.lower()
+    refKingdomType = clArgs.kingdom
     refProteome = clArgs.Proteome_input
     outFile = clArgs.output_file 
     eValue = clArgs.Evalue_cutoff
@@ -39,10 +39,12 @@ def parseInput():
 
 def runHMMer(refProfileHMM, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
-    if refProfileHMM == "b":
-        file_to_open = './BactProfileHMM.txt' #UPDATE PATH
+    if refKingdomType == 'B':
+        file_to_open = './DomainDicBact.txt' #updatepaths 
+    elif refKingdomType == 'E':
+        file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
-        file_to_open = './EukProfileHMM.txt' # UPDATE PATH
+        print('no set of proteins for archaea yet, sorry!')
     
     Proteome = refProteome 
     TableOutF = "TableOut" 
@@ -81,9 +83,9 @@ def readHMMerOutput(TableOutF, eValue):
 def domain_finder(Hmm_search_dict, refKingdomType):
     '''make domain dictionary with domain as key'''
 
-    if refKingdomType == "b":
+    if refKingdomType == 'B':
         file_to_open = './DomainDicBact.txt' #updatepaths 
-    elif refKingdomType == 'e'
+    elif refKingdomType == 'E':
         file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
