@@ -32,12 +32,12 @@ def parseInput():
 
     refKingdomType = clArgs.Kingdom_type
     refProteome = clArgs.Proteome_input
-    outFile = clArgs.output_file
+    outFile = clArgs.output_file 
     eValue = clArgs.Evalue_cutoff
 
     return refKingdomType, refProteome, outFile, eValue
 
-def runHMMer(refProfileHMM, refProteome, outFile):
+def runHMMer(refProfileHMM, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     if refProfileHMM == "b":
         file_to_open = './BactProfileHMM.txt' #UPDATE PATH
@@ -45,27 +45,22 @@ def runHMMer(refProfileHMM, refProteome, outFile):
         file_to_open = './EukProfileHMM.txt' # UPDATE PATH
     
     Proteome = refProteome 
-    OutF = outFile 
+    TableOutF = "TableOut" 
     command ="hmmsearch "
 
-    command_string = command + "--tblout " + OutF + " " + file_to_open + " " + Proteome
+    command_string = command + "--tblout " + TableOutF + " " + file_to_open + " " + Proteome
 
     print(command_string)
 
     inresult = subprocess.check_output(command_string, shell=True)
 
     result = inresult.decode("utf-8")
-    return result, OutF
+    return result, TableOutF
 
 
-
-
-def readHMMerOutput(outF, eValue):
-    """Read results from hmmer -tblout output file"""
-    
+def readHMMerOutput(TableOutF, eValue):
     Hmm_search_dict = {}
-    
-    with open(outF, 'r') as TblOut:
+    with open(TableOutF, 'r') as TblOut:
         
         table = TblOut.readlines()[3:-10]
         #print(table)
@@ -74,29 +69,18 @@ def readHMMerOutput(outF, eValue):
             sLine = line.split()
 
             if float(sLine[4]) < float(eValue):
-                Hmm_search_dict[sLine[2]] = sLine[3:5]
-            else:
-                Hmm_search_dict[sLine[2]] = sLine[3:5]
-
-
-            #    if float(sLine[4]) < evalue
-               #     Hmm_search_dict[sLine[2]] = sLine[3:5]
-               # else:
-               #     Hmm_search_dict[sLine[2]] = sLine[3:5]
-
-            # sLine is an array of all the words in a given line
-            # sLine = ["NP_011778.1", "-", "Kdo", "PF06293.15", "5.3e-08", "30.9"]
-            #if sLine[2] in Hmm_search_dict:
-                #if float(sLine[4]) > float(Hmm_search_dict[sLine[2]][4]):
-                  #  Hmm_search_dict[sLine[2]] = sLine[3:5]
-          #  else:
-             #   Hmm_search_dict[sLine[2]] = sLine[3:5]
-
+                Hmm_search_dict[sLine[2]] = sLine[4:5]
     #print(Hmm_search_dict)
     return Hmm_search_dict
 
 
+    #print(Hmm_search_dict)
+    
+
+
 def domain_finder(Hmm_search_dict, refKingdomType):
+    '''make domain dictionary with domain as key'''
+
     if refKingdomType == "b":
         file_to_open = './DomainDicBact.txt' #updatepaths 
     else:
@@ -104,8 +88,13 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     dataFrame = pd.read_csv(file_to_open,sep='\t')
 
-    domain_dict = {}
+    df = pd.read_csv(file_to_open,sep='\t')
+    domain_dict = df.set_index('Domain').T.to_dict('list')
 
+    #print(domain_dict)
+    return domain_dict
+'''
+    domain_dict = {}
     for key in Hmm_search_dict.keys():
         sub_df = dataFrame[dataFrame["Domain"]==key]
 
@@ -114,37 +103,56 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     #print(domain_dict)
     return domain_dict
-
+'''
 def combine_dicts(domain_dict, Hmm_search_dict):
-
-    missing_domains = []
+    '''read dictionary and merge interesecting domain from 
+    tbleout info and domaindictionaries'''
     for domain in domain_dict: 
-        if domain not in Hmm_search_dict:
-            missing_domains.append(domain)
-        else:
-            Hmm_search_dict[domain].append(domain_dict[domain])
+        if domain in Hmm_search_dict:
+            for info in domain_dict[domain]:
+                Hmm_search_dict[domain].append(info)           
 
-    #print(Hmm_search_dict)
-    print(missing_domains)
-    return missing_domains, Hmm_search_dict 
+    print(Hmm_search_dict)
+    return Hmm_search_dict 
 
-def dataframe_out(Hmm_search_dict):
+def dataframe_out(Hmm_search_dict, outFile):
 
     outFrame = pd.DataFrame.from_dict(Hmm_search_dict, orient='index')
+    rawOutFrame = outFrame.to_csv(outFile, sep='\t',index=True,header=False)
+    print(outFrame)
+    return rawOutFrame
 
-    return outFrame.to_csv('output.tsv',sep='\t',index=False,header=False)
+'''
+def Parse_dataframe(outFile):
+    infoDict = {}
 
+    with open('outFileTEST.txt', 'r') as inF:
+        lines = inF.readlines()[1:]
+        for line in lines:
+            line_array = line.split('\t')
+            split_info = line_array[2].split(',')
+            print(split_info)
+            # overwrite the old data
+            line_array[2] = split_info[0]
+            for i in range(1, len(split_info)):
+                line_array.append(split_info[i])
 
-
-
+            with open(outFile + ".txt", "a") as output:
+                for item in line_array:
+                    output.write(item)
+                    output.write("\t")
+    print(split_info)
+  '''              
 
 if __name__ == "__main__":
     refKingdomType, refProteome, outFile, eValue = parseInput()
-    result, OutF = runHMMer(refKingdomType, refProteome, outFile)
-    Hmm_search_dict = readHMMerOutput(OutF, eValue)
+    result, TableOutF = runHMMer(refKingdomType, refProteome)
+    Hmm_search_dict = readHMMerOutput(TableOutF, eValue)
     domain_dict = domain_finder(Hmm_search_dict, refKingdomType)
-    missing_domains, Hmm_search_dict = combine_dicts(domain_dict, Hmm_search_dict)
-    dataframe_out(Hmm_search_dict)
+    Hmm_search_dict = combine_dicts(domain_dict, Hmm_search_dict)
+   # dataframe_out(Hmm_search_dict, outFile)
+    dataframe_out(Hmm_search_dict, outFile)
+
 
     
 
