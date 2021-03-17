@@ -21,7 +21,7 @@ def parseInput():
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     
-    clArgs = argParser.parse_args('-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test/ -k B -p ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa'.split())
+    clArgs = argParser.parse_args('-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test/ -k B -p ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa --skip_sprinzl_align'.split())
     tRNAstruct = clArgs.tRNAscan_ss
     protSeqs = clArgs.protein_sequences
     orgKing = kingdoms[clArgs.kingdom]
@@ -52,8 +52,9 @@ def main():
     
     #Search protein sequences
     protFile = '{0}/domainHits.txt'.format(outDir)
-    #domainHits = HMMprogramV1_1.main(inCL = False, refKingdomType = orgKing, 
-    #                             refProteome = protSeqs, outputFile = protFile, eValue = eCutoff)
+    domainHits = HMMprogramV1_1.main(inCL = False, refKingdomType = orgKing, 
+                                     refProteome = protSeqs, outFile = protFile, eValue = eCutoff)
+    
     domainHits = str()
     predVis.main(inCL = False, calls = seqFile, 
                  scores = scoreFile, proteins = domainHits, 

@@ -3,15 +3,7 @@ cmo5U	Methyltransf_25	34
 mcmo5U	Methyltransf_25	34
 cmo5U	Methyltransf_9	34
 mcmo5U	Methyltransf_10	34
-D	Dus	20
-D	Dus	16
-D	Dus	20
-D	Dus	17
-D	Dus	20a
-D	Dus	20
-D	Dus	16
-D	Dus	17
-D	Dus	20b
+D	Dus	"16, 17, 20a, 20b"
 gluQtRNA	unknown	34
 i6A	tRNA-synt_1c	37
 ms2i6A	Radical_SAM	37

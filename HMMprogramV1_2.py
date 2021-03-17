@@ -4,7 +4,13 @@ There exists two refined domain profile-HMMs required for this program to work f
 both bacteria and single-cell euekaryotes. 
 Please remember to update file_to_open path in def runHmmer!!!
 #Still need to review and implement evalue cutoff
+<<<<<<< HEAD
 Arguements
+=======
+
+Arguements
+
+>>>>>>> 04a53dfe53860043c3f3770683bb472b2827ea13
 hmmsearch <hmmmodel> <proteome> 
 '''
 
@@ -39,9 +45,9 @@ def runHMMer(refKingdomType, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     
     file_to_open = None
-    if refKingdomType == 'B':
+    if refKingdomType == 'Bacteria':
         file_to_open = './BactProfileHMM.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Eukaryotic':
         file_to_open = './EukProfileHMM.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -53,12 +59,9 @@ def runHMMer(refKingdomType, refProteome):
 
         command_string = command + "--tblout " + TableOutF + " " + file_to_open + " " + Proteome
 
-        print(command_string)
-
         inresult = subprocess.check_output(command_string, shell=True)
 
         result = inresult.decode("utf-8")
-        
         return result, TableOutF
         
     except TypeError:
@@ -71,7 +74,6 @@ def readHMMerOutput(TableOutF, eValue):
     with open(TableOutF, 'r') as TblOut:
         
         table = TblOut.readlines()[3:-10]
-        #print(table)
 
         for line in table:
             sLine = line.split()
@@ -88,10 +90,12 @@ def readHMMerOutput(TableOutF, eValue):
 
 def domain_finder(Hmm_search_dict, refKingdomType):
     '''make domain dictionary with domain as key'''
+
     file_to_open = None
-    if refKingdomType == 'B':
+    
+    if refKingdomType == 'Bacteria':
         file_to_open = './DomainDicBact.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Eukaryotic':
         file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -107,12 +111,28 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     except TypeError:
         pass
+
+
+    dataFrame = pd.read_csv(file_to_open,sep='\t')
+
+    df = pd.read_csv(file_to_open,sep='\t')
+    domain_dict = df.set_index('Domain').T.to_dict('list')
+
+    #print(domain_dict)
+    return domain_dict
+
 '''
     domain_dict = {}
     for key in Hmm_search_dict.keys():
         sub_df = dataFrame[dataFrame["Domain"]==key]
+
         if sub_df.values.tolist():
             domain_dict[key] = sub_df.values.tolist()
+
+
+        if sub_df.values.tolist():
+            domain_dict[key] = sub_df.values.tolist()
+
     #print(domain_dict)
     return domain_dict
 '''
@@ -137,6 +157,7 @@ def dataframe_out(Hmm_search_dict, outFile):
 '''
 def Parse_dataframe(outFile):
     infoDict = {}
+
     with open('outFileTEST.txt', 'r') as inF:
         lines = inF.readlines()[1:]
         for line in lines:
@@ -147,6 +168,7 @@ def Parse_dataframe(outFile):
             line_array[2] = split_info[0]
             for i in range(1, len(split_info)):
                 line_array.append(split_info[i])
+
             with open(outFile + ".txt", "a") as output:
                 for item in line_array:
                     output.write(item)
@@ -154,13 +176,13 @@ def Parse_dataframe(outFile):
     print(split_info)
   '''              
 
-def main(inCL = True, refKingdomType = None, refProteome = None, outputFile = None, eValue = 0.0001):
+def main(inCL = True, refKingdomType = None, refProteome = None, outFile = None, eValue = 0.0001):
     
     #Parse command line or recieve args
-    sprint(refKingdomType)
+    
     if inCL == True:
         refKingdomType, refProteome, outFile, eValue = parseInput()
-        
+
     #run HMMer on sequences
     result, TableOutF = runHMMer(refKingdomType, refProteome)
     
