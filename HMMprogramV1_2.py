@@ -45,9 +45,9 @@ def runHMMer(refKingdomType, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     
     file_to_open = None
-    if refKingdomType == 'B':
+    if refKingdomType == 'Bacteria':
         file_to_open = './BactProfileHMM.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Euaryote':
         file_to_open = './EukProfileHMM.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -93,9 +93,9 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     file_to_open = None
     
-    if refKingdomType == 'B':
+    if refKingdomType == 'Bacteria':
         file_to_open = './DomainDicBact.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Eukaryote':
         file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
