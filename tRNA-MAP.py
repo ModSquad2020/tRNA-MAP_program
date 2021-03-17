@@ -21,9 +21,7 @@ def parseInput():
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     
-    #'-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test/ -k B --protein_sequences ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa'.split()
-    #-n ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa
-    clArgs = argParser.parse_args('-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test/ -k B -p ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa')
+    clArgs = argParser.parse_args('-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./strepneumo_test/ -k B -p ./strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa'.split())
     tRNAstruct = clArgs.tRNAscan_ss
     protSeqs = clArgs.protein_sequences
     orgKing = kingdoms[clArgs.kingdom]
@@ -38,7 +36,7 @@ def parseInput():
 def main():
     """"""
     import mapSeqs
-    import HMMprogram
+    import HMMprogramV1_1
     import predVis
     
     secStruct, protSeqs, orgKing, outDir, cmFile, probFile, skipSprinzl, eCutoff = parseInput()
@@ -47,9 +45,6 @@ def main():
     if outDir[-1] == '/':
         outDir = outDir[:-1]
     
-    print(outDir)
-    
-    
     #Predict tRNA sequences
     seqFile, scoreFile = mapSeqs.main(inCL = False, ssFile = secStruct, domain = orgKing, 
                                       outputFile = outDir, cmsToSearch = cmFile, 
@@ -57,10 +52,10 @@ def main():
     
     #Search protein sequences
     protFile = '{0}/domainHits.txt'.format(outDir)
-    domainHits = HMMprogram.main(inCL = False, refKingdomType = orgKing, 
-                                 refProteome = protSeqs, outputFile = protFile, eValue = eCutoff)
-    
-    predVis.main(inCl = False, calls = seqFile, 
+    #domainHits = HMMprogramV1_1.main(inCL = False, refKingdomType = orgKing, 
+    #                             refProteome = protSeqs, outputFile = protFile, eValue = eCutoff)
+    domainHits = str()
+    predVis.main(inCL = False, calls = seqFile, 
                  scores = scoreFile, proteins = domainHits, 
                  outFile = outDir)
     

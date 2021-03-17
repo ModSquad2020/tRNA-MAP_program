@@ -1,4 +1,4 @@
-"""
+"""
 Sort sequences and run CMs; generate output file
 
 1) filter out sequences with wrong base
@@ -331,13 +331,15 @@ def assignProb(tRNAseqs, modInfo, probDict):
           
     return probs
         
-def main(inCl = True, ssFile = None, domain = None, outputFile = None, cmsToSearch = './CMlibrary.txt', condProbs = './probLibrary.txt', skipSpr = False):
+def main(inCL = True, ssFile = None, domain = None, outputFile = None, cmsToSearch = './CMlibrary.txt', condProbs = './probLibrary.txt', skipSpr = False):
     """Execute commands"""
     import os
     
+    print(inCL, ssFile, domain, outputFile)
+    
     #Recieve command line args
     #tRNAstruct, orgKing, outfile, sortFile , runFile
-    if inCl:
+    if inCL == True:
         ssFile, domain, outputFile, cmsToSearch, condProbs, skipSpr = parseInput()
     
     tempDir = '{0}/tmp'.format('/'.join(outputFile.split('/')))
@@ -555,5 +557,4 @@ def writeOutput(callsFile, scoreFile, preds, isos, searchedMods, modPositions, n
                 
         cF.close()
         sF.close()
-    
-main()
+
