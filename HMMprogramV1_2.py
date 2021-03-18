@@ -79,7 +79,7 @@ def readHMMerOutput(TableOutF, eValue):
             sLine = line.split()
 
             if float(sLine[4]) < float(eValue):
-                Hmm_search_dict[sLine[2]] = sLine[0:4]
+                Hmm_search_dict[sLine[2]] = sLine[0:5]
     return Hmm_search_dict
 
 
@@ -149,7 +149,7 @@ def combine_dicts(domain_dict, Hmm_search_dict):
 def dataframe_out(Hmm_search_dict, outFile):
 
     dFrame = pd.DataFrame.from_dict(Hmm_search_dict, orient='index')
-    outFrame = dFrame.drop(columns=[1])
+    outFrame = dFrame.drop(columns=[1,2,3])
     print(outFrame)
     rawOutFrame = outFrame.to_csv(outFile, sep='\t',index=True,header=False)
     #print(outFrame)
@@ -199,7 +199,7 @@ def main(inCL = True, refKingdomType = None, refProteome = None, outFile = None,
     
     return outFile
 
-main()
+
 
 
 
