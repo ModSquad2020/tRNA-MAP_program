@@ -45,9 +45,9 @@ def runHMMer(refKingdomType, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     
     file_to_open = None
-    if refKingdomType == 'Bacteria':
+    if refKingdomType == 'B':
         file_to_open = './BactProfileHMM.txt' #updatepaths 
-    elif refKingdomType == 'Euaryote':
+    elif refKingdomType == 'E':
         file_to_open = './EukProfileHMM.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -79,8 +79,7 @@ def readHMMerOutput(TableOutF, eValue):
             sLine = line.split()
 
             if float(sLine[4]) < float(eValue):
-                Hmm_search_dict[sLine[2]] = sLine[3:5]
-    print(Hmm_search_dict)
+                Hmm_search_dict[sLine[2]] = sLine[0:4]
     return Hmm_search_dict
 
 
@@ -93,9 +92,9 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     file_to_open = None
     
-    if refKingdomType == 'Bacteria':
+    if refKingdomType == 'B':
         file_to_open = './DomainDicBact.txt' #updatepaths 
-    elif refKingdomType == 'Eukaryote':
+    elif refKingdomType == 'E':
         file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -149,7 +148,9 @@ def combine_dicts(domain_dict, Hmm_search_dict):
 
 def dataframe_out(Hmm_search_dict, outFile):
 
-    outFrame = pd.DataFrame.from_dict(Hmm_search_dict, orient='index')
+    dFrame = pd.DataFrame.from_dict(Hmm_search_dict, orient='index')
+    outFrame = dFrame.drop(columns=[1])
+    print(outFrame)
     rawOutFrame = outFrame.to_csv(outFile, sep='\t',index=True,header=False)
     #print(outFrame)
     return rawOutFrame
@@ -197,6 +198,8 @@ def main(inCL = True, refKingdomType = None, refProteome = None, outFile = None,
     dataframe_out(results_dict, outFile)
     
     return outFile
+
+main()
 
 
 
