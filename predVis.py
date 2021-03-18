@@ -24,13 +24,13 @@ def parseInput():
     argParser = argparse.ArgumentParser(description = 'This program generates track hubs that display Modomics data')
     argParser.add_argument('-c', '--mod_calls', required = True, help = 'modification calls file')
     argParser.add_argument('-o', '--output_file', required = True, help = 'output html file')
-    argParser.add_argument('-k', '--kingdom', required = False, choices = {'E', 'A', 'B'}, help = 'Domain of organism')
+    #argParser.add_argument('-k', '--kingdom', required = False, choices = {'E', 'A', 'B'}, help = 'Domain of organism')
     argParser.add_argument('-s', '--mod_scores', required = True, help = 'modification scores file')
     argParser.add_argument('-e', '--enzyme_predictions', required = True, help = 'enzyme predictions file')
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     #'-c ./strepneumo_test/modCalls.txt -s ./strepneumo_test/modScores.txt -e ./strepneumo_test/output.tsv -o ./strepneumo_test'.split()
-    clArgs = argParser.parse_args()
+    clArgs = argParser.parse_args('-c ./strepneumo_test/modCalls.txt -s ./strepneumo_test/modScores.txt -e ./strepneumo_test/domainHits.txt -o ./strepneumo_test'.split())
     callFile = clArgs.mod_calls
     #orgKing = kingdoms[clArgs.kingdom]
     outFile = clArgs.output_file
@@ -39,7 +39,7 @@ def parseInput():
     
     return callFile, scoreFile, protFile, outFile
 
-def readTSV(inputFile):
+def readTSV(inputFile, header = True):
     """Read a TSV with row and column headers"""
     
     #Store mod info: mod: {modified_position: {'+': [tRNAs], '-': [tRNAs]]}
@@ -47,11 +47,19 @@ def readTSV(inputFile):
     
     with open(inputFile, 'r') as inF:
         
-        lines = inF.readlines()
+        #Handle header presence
+        rawLines = inF.readlines()
         
         #TSV columns
-        cols = lines[0].strip().split('\t')
+        cols = []
+        lines = []
+        if header == True:
+            cols = rawLines[0].strip().split('\t')
+            lines = rawLines[1:]
+        else:
+            lines = rawLines
         
+        #parse each line
         for line in lines[1:]:
             splitLine = line.strip().split('\t')
             
@@ -72,7 +80,44 @@ def readTSV(inputFile):
 
 def parseProts(inputFile):
     """Parse protein file, return dictionary sorted by modification and position"""
-    pass
+    
+    hitDict = {}
+    
+    with open(inputFile) as inF:
+        
+        lines = inF.readlines()
+        
+        for line in lines[:-2]:
+            
+            #Handle entries that dont have associated mod and position
+            try:
+                splitLine = line.strip().split('\t')
+                mod = splitLine[3]
+                pos = splitLine[4].split(' ')
+                domains = splitLine[0].split(',')
+                accNo = splitLine[1].split(',')
+                print(domains)
+                eVals = splitLine[2].split(',')
+                
+                for p in pos:
+                    
+                    for d, e, acc in zip(domains, eVals, accNo):
+                        
+                        try:
+                            try:
+                                hitDict[p][mod][d] = [e, acc]
+                                    
+
+                            except KeyError:
+                                hitDict[p][mod] = {d:[e, acc]}
+
+                        except KeyError:
+                            hitDict[p] = {mod: {d:[e, acc]}}
+                    
+            except IndexError:
+                pass
+                   
+    return hitDict
 
 
 def bit2prob(bitScore):
@@ -80,7 +125,9 @@ def bit2prob(bitScore):
     
     return 1/(1+2**(-bitScore))
     
-
+def hexCol(prob):
+    """Returns a hexadecimal color that represents """
+    return "#%02x%02x%02x" % (235, int(round(235-(235*(prob)/3))), int(round(235-(235*(prob)/3))))
 
 def makeFig(callDict, scoreDict, protDict, outF):
     """Make an interactive cloverleaf output figure"""
@@ -107,18 +154,18 @@ def makeFig(callDict, scoreDict, protDict, outF):
     
     xPos = 18.539
     #Construct blues
-    for prob in np.arange(0, 0.5, 0.01):
-        keyYtop.append(-110)
-        keyYbottom.append(-130)
-        keyX.append(18 + prob*2/0.01)
-        colKey.append("#%02x%02x%02x" % (int(round(255-(225*(0.5-prob)))), int(round(255-(160*(0.5-prob)))), 255))
+    #for prob in np.arange(0, 0.5, 0.01):
+    #    keyYtop.append(-110)
+    #    keyYbottom.append(-130)
+    #    keyX.append(18 + prob*2/0.01)
+    #    colKey.append("#%02x%02x%02x" % (int(round(255-(225*(0.5-prob)))), int(round(255-(160*(0.5-prob)))), 255))
             
     #construct reds
-    for prob in np.arange(0.5, 1, 0.01):
+    for prob in np.arange(0, 1, 0.01):
         keyYbottom.append(-110)
         keyYtop.append(-130)
         keyX.append(18 + prob*2/0.01)
-        colKey.append("#%02x%02x%02x" % (255, int(round(255-(225*(prob-0.5)))), int(round(255-(160*(prob-0.5))))))
+        colKey.append(hexCol(prob))
     
     #Construct text for heat map key
     mapTextX = [min(keyX)+((max(keyX)-min(keyX))/2)-1, min(keyX)-1, min(keyX)+((max(keyX)-min(keyX))/2)-1, max(keyX)-1]
@@ -142,14 +189,22 @@ def makeFig(callDict, scoreDict, protDict, outF):
         sizes = []
         proteins = []
         
-        #if tRNA == 'tRNA-Arg-ACG-1':
-                #print(pos, callDict[tRNA][pos], scoreDict[tRNA][pos])
-        
         #Add different values to different vectors
         for pos in cloverCoords.keys():
             
             positions.append(pos)
             bases.append(callDict[tRNA][pos])
+            
+            #Add protein information
+            try:
+                #generate labels
+                protLabels = ['{0}: {1}, {2}'.format(x, protDict[pos][callDict[tRNA][pos]][x][1], 
+                                                     protDict[pos][callDict[tRNA][pos]][x][0]) for x in protDict[pos][callDict[tRNA][pos]] ]
+                
+                proteins.append('; '.join(list(protLabels)))
+            except KeyError:
+                proteins.append('None')
+                                
             
             X.append(cloverCoords[pos][0])
             Y.append(-cloverCoords[pos][1])
@@ -170,14 +225,16 @@ def makeFig(callDict, scoreDict, protDict, outF):
                     scores.append(float(scoreDict[tRNA][pos]))
                     
                 #Color the heat map based on mod score
-                if prob > 0.5:
-                    col.append("#%02x%02x%02x" % (255, int(round(255-(225*(prob-0.5)))), int(round(255-(160*(prob-0.5))))))
+                col.append(hexCol(prob))
                 
-                elif prob < 0.5:
-                    col.append("#%02x%02x%02x" % (int(round(255-(225*(0.5-prob)))), int(round(255-(160*(0.5-prob)))), 255))
+                #if prob > 0.5:
+                #    col.append("#%02x%02x%02x" % (255, int(round(255-(225*(prob-0.5)))), int(round(255-(160*(prob-0.5))))))
                 
-                else:
-                    col.append("#%02x%02x%02x" % (255, 255, 255))
+                #elif prob < 0.5:
+                #    col.append("#%02x%02x%02x" % (int(round(255-(225*(0.5-prob)))), int(round(255-(160*(0.5-prob)))), 255))
+                
+                #else:
+                #    col.append("#%02x%02x%02x" % (255, 255, 255))
                     
             else:
                 
@@ -196,12 +253,12 @@ def makeFig(callDict, scoreDict, protDict, outF):
         cloverSource = ColumnDataSource({'x': X, 'y': Y, 'col': col, 
                                          'bases': bases, 'scores': scores, 
                                          'probs': probs, 'positions': positions, 
-                                         'sizes': sizes})
+                                         'sizes': sizes, 'proteins': proteins})
         
         Tooltips = [('modification', '@bases'), 
                     ('score', '@scores'),
-                    ('position', '@positions')]
-                    #('possible enzymes', 'placeholder')]
+                    ('position', '@positions'),
+                    ('possible enzymes', '@proteins')]
         
         #Instantiate cloverleaf structure 
         clover = figure(title = '{0}'.format(tRNA), x_axis_label = '', y_axis_label = '',
@@ -253,9 +310,10 @@ def main(inCL = True, calls = None, scores = None, proteins = None, outFile = No
         #Recieve input commands
         calls, scores, proteins, outFile = parseInput()
     
-    
     callsDict = readTSV(calls)
     scoresDict = readTSV(scores)
+    domainHits = parseProts(proteins)
     
-    makeFig(callsDict, scoresDict, proteins, outFile)
+    makeFig(callsDict, scoresDict, domainHits, outFile)
     
+main()
