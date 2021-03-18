@@ -315,5 +315,3 @@ def main(inCL = True, calls = None, scores = None, proteins = None, outFile = No
     domainHits = parseProts(proteins)
     
     makeFig(callsDict, scoresDict, domainHits, outFile)
-    
-main()
