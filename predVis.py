@@ -30,7 +30,7 @@ def parseInput():
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     #'-c ./strepneumo_test/modCalls.txt -s ./strepneumo_test/modScores.txt -e ./strepneumo_test/output.tsv -o ./strepneumo_test'.split()
-    clArgs = argParser.parse_args('-c ./strepneumo_test/modCalls.txt -s ./strepneumo_test/modScores.txt -e ./strepneumo_test/domainHits.txt -o ./strepneumo_test'.split())
+    clArgs = argParser.parse_args()
     callFile = clArgs.mod_calls
     #orgKing = kingdoms[clArgs.kingdom]
     outFile = clArgs.output_file
@@ -96,7 +96,7 @@ def parseProts(inputFile):
                 pos = splitLine[4].split(' ')
                 domains = splitLine[0].split(',')
                 accNo = splitLine[1].split(',')
-                print(domains)
+                
                 eVals = splitLine[2].split(',')
                 
                 for p in pos:

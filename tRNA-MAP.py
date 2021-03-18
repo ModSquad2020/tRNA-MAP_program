@@ -1,6 +1,16 @@
 """
 Call different aspects of tRNA-MAP program
 
+Improvements:
+- custom terminal output
+- static summary
+- different classes of mods, different colors
+- Change heat map to one color because it is hard to see around 50%
+
+Tests:
+- run bacterial mod predictions on saccharomyces as a negative control/don't expect to do well.
+- static summary
+- different classes of mods, different colors
 
 """
 
@@ -36,7 +46,7 @@ def parseInput():
 def main():
     """"""
     import mapSeqs
-    import HMMprogramV1_1
+    import HMMprogramV1_2
     import predVis
     
     secStruct, protSeqs, orgKing, outDir, cmFile, probFile, skipSprinzl, eCutoff = parseInput()
@@ -55,12 +65,8 @@ def main():
     domainHits = HMMprogramV1_2.main(inCL = False, refKingdomType = orgKing, 
                                      refProteome = protSeqs, outFile = protFile, eValue = eCutoff)
     
-    domainHits = str()
     predVis.main(inCL = False, calls = seqFile, 
-                 scores = scoreFile, proteins = domainHits, 
+                 scores = scoreFile, proteins = protFile, 
                  outFile = outDir)
-    
-    
-    
     
 main()

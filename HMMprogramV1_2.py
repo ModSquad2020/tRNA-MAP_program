@@ -32,10 +32,12 @@ def parseInput():
     #example input
     #python3 HMMprogram.py -k b -p Ecoli_proteome.faa -o ./HMMprofileResults/EcoliHMMsearchResults
     
+    kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
+    
     clArgs = argParser.parse_args()
 
     refKingdomType = clArgs.kingdom
-    refProteome = clArgs.Proteome_input
+    refProteome = kingdoms[clArgs.Proteome_input]
     outFile = clArgs.output_file 
     eValue = clArgs.Evalue_cutoff
 
@@ -45,9 +47,9 @@ def runHMMer(refKingdomType, refProteome):
     """take in correct reference Profile-HMM and Proteome and run HMMsearch"""
     
     file_to_open = None
-    if refKingdomType == 'B':
+    if refKingdomType == 'Bacteria':
         file_to_open = './BactProfileHMM.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Eukaryota':
         file_to_open = './EukProfileHMM.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -92,9 +94,9 @@ def domain_finder(Hmm_search_dict, refKingdomType):
 
     file_to_open = None
     
-    if refKingdomType == 'B':
+    if refKingdomType == 'Bacteria':
         file_to_open = './DomainDicBact.txt' #updatepaths 
-    elif refKingdomType == 'E':
+    elif refKingdomType == 'Eukaryota':
         file_to_open = './DomainDicEuk.txt' #updatepaths
     else:
         print('no set of proteins for archaea yet, sorry!')
@@ -150,7 +152,7 @@ def dataframe_out(Hmm_search_dict, outFile):
 
     dFrame = pd.DataFrame.from_dict(Hmm_search_dict, orient='index')
     outFrame = dFrame.drop(columns=[1,2,3])
-    print(outFrame)
+    
     rawOutFrame = outFrame.to_csv(outFile, sep='\t',index=True,header=False)
     #print(outFrame)
     return rawOutFrame
@@ -198,8 +200,3 @@ def main(inCL = True, refKingdomType = None, refProteome = None, outFile = None,
     dataframe_out(results_dict, outFile)
     
     return outFile
-
-
-
-
-
