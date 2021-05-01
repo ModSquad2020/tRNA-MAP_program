@@ -1,0 +1,62 @@
+# STOCKHOLM 1.0
+#=GF AU Infernal 1.1.3
+
+Escherichia_coli-tRNA-Gly-GCC-1                                                  GCGGGAATAGCTCAGTT-GGT--AGAGCACGACCTTGCCAAGGTCGGG-------------------GTCGCGAGTTCGAGTCTCGTTTCCCGCTCCA
+Escherichia_coli-tRNA-Lys-TTT-1                                                  GGGTCGTTAGCTCAGTT-GGT--AGAGCAGTTGACTTTTAATCAATTG-------------------GTCGCAGGTTCGAATCCTGCACGACCCACCA
+Escherichia_coli-tRNA-Leu-TAG-1                                                  GCGGGAGTGGCGAAATT-GGTA-GACGCACCAGATTTAGGTTCTGGC-GCC----GCAA-----GGTG-TGCGAGTTCAAGTCTCGCCTCCCGCACCA
+Escherichia_coli-tRNA-Arg-ACG-1                                                  GCATCCGTAGCTCAGCT-GGAT-AGAGTACTCGGCTACGAACCGAGCG-------------------GTCGGAGGTTCGAATCCTCCCGGATGCACCA
+Escherichia_coli-tRNA-Val-GAC-1                                                  GCGTTCATAGCTCAGTT-GGTT-AGAGCACCACCTTGACATGGTGGGG-------------------GTCGTTGGTTCGAGTCCAATTGAACGCACCA
+Escherichia_coli-tRNA-Met-CAT-1                                                  GGCTACGTAGCTCAGTT-GGTT-AGAGCACATCACTCATAATGATGGG-------------------GTCACAGGTTCGAATCCCGTCGTAGCCACCA
+Escherichia_coli-tRNA-His-GTG-1                                                  GTGGCTATAGCTCAGTT-GGT--AGAGCCCTGGATTGTGATTCCAGTT-------------------GTCGTGGGTTCGAATCCCATTAGCCACCCCA
+Escherichia_coli-tRNA-Val-TAC-1                                                  GGGTGATTAGCTCAGCT-GGG--AGAGCACCTCCCTTACAAGGAGGGG-------------------GTCGGCGGTTCGATCCCGTCATCACCCACCA
+Escherichia_coli-tRNA-Ala-TGC-1                                                  GGGGCTATAGCTCAGCT-GGG--AGAGCGCCTGCTTTGCACGCAGGAG-------------------GTCTGCGGTTCGATCCCGCATAGCTCCACCA
+Escherichia_coli-tRNA-Ala-GGC-1                                                  GGGGCTATAGCTCAGCT-GGG--AGAGCGCTTGCATGGCATGCAAGAG-------------------GTCAGCGGTTCGATCCCGCTTAGCTCCACCA
+Escherichia_coli-tRNA-Leu-GAG-1                                                  GCCGAGGTGGTGGAATT-GGTA-GACACGCTACCTTGAGGTGGTAGTGCCCAA---------TAGGGCTTACGGGTTCAAGTCCCGTCCTCGGTACCA
+Escherichia_coli-tRNA-Leu-CAG-1                                                  GCGAAGGTGGCGGAATT-GGTA-GACGCGCTAGCTTCAGGTGTTAGT-GTTC---TTAC----GGACG-TGGGGGTTCAAGTCCCCCCCCTCGCACCA
+Escherichia_coli-tRNA-Leu-CAG-2                                                  GCGAAGGTGGCGGAATT-GGTA-GACGCGCTAGCTTCAGGTGTTAGT-GTCC---TTAC----GGACG-TGGGGGTTCAAGTCCCCCCCCTCGCACCA
+Escherichia_coli-tRNA-Ile-GAT-1                                                  AGGCTTGTAGCTCAGGT-GGTT-AGAGCGCACCCCTGATAAGGGTGAG-------------------GTCGGTGGTTCAAGTCCACTCAGGCCTACCA
+Escherichia_coli-tRNA-Thr-GGT-1                                                  GCTGATATGGCTCAGTT-GGT--AGAGCGCACCCTTGGTAAGGGTGAG-------------------GTCCCCAGTTCGACTCTGGGTATCAGCACCA
+Escherichia_coli-tRNA-Thr-GGT-2                                                  GCTGATATAGCTCAGTT-GGT--AGAGCGCACCCTTGGTAAGGGTGAG-------------------GTCGGCAGTTCGAATCTGCCTATCAGCACCA
+Escherichia_coli-tRNA-Trp-CCA-1                                                  AGGGGCGTAGTTCAATT-GGT--AGAGCACCGGTCTCCAAAACCGGGT-------------------GTTGGGAGTTCGAGTCTCTCCGCCCCTGCCA
+Escherichia_coli-tRNA-Arg-CCG-1                                                  GCGCCCGTAGCTCAGCT-GGAT-AGAGCGCTGCCCTCCGGAGGCAGAG-------------------GTCTCAGGTTCGAATCCTGTCGGGCGCGCCA
+Escherichia_coli-tRNA-Val-GAC-2                                                  GCGTCCGTAGCTCAGTT-GGTT-AGAGCACCACCTTGACATGGTGGGG-------------------GTCGGTGGTTCGAGTCCACTCGGACGCACCA
+Mycoplasma_capricolum-tRNA-Arg-ACG-1                                             GCGCCCGTAGATCAATT-GGAT-AGATCGCTTGACTACGGATCAAAAG-------------------GTTGGGGGTTCGAGTCCCTCCGGGCGCACCA
+Mycoplasma_capricolum-tRNA-Thr-AGT-1                                             GCTGACTTAGCTCAGTT-GGT--AGAGCAATTGACTAGTAATCAATAG-------------------GTCGAAGGTTCAAATCCTTTAGTCAGCACCA
+Mycoplasma_capricolum-tRNA-Leu-TAG-1                                             GGGGGATTGGCGGAATT-GGCA-GACGCACTAGACTTAGGATCTAGC-GTC----TTT------GACG-TAAGGGTTCAAGTCCCTTATCCCCCACCA
+Mycoplasma_capricolum-tRNA-Lys-CTT-1                                             GTCTGATTAGCGCAACT-GGC--AGAGCAACTGACTCTTAATCAGTGG-------------------GTTGTGGGTTCGATTCCCACATCAGGCACCA
+Mycoplasma_capricolum-tRNA-Asp-GTC-1                                             GGCCCCATAGCGAAGTT-GGTT-ATCGCGCCTCCCTGTCACGGAGGAG-------------------ATCACGGGTTCGAGTCCCGTTGGGGTCGCCA
+Mycoplasma_capricolum-tRNA-Val-TAC-1                                             GGAGTGTTAGCTCAGCT-GGG--AGAGCTCCTGCCTTACAAGCAGGCG-------------------GTCATAGGTTCAAGTCCTATACACTCCACCA
+Mycoplasma_capricolum-tRNA-Ile-GAT-1                                             CGGAATATAGCTCAGCT-GGTT-AGAGCACTCCGCTGATAACGGAGAG-------------------GTCGTTGGTTCAAGTCCAATTATTCCGACCA
+Mycoplasma_capricolum-tRNA-Ser-GCT-1                                             GGGTTAATACTCAAGTT-GGTG-AAGAGGACACCCTGCTAAGGTGTTAGGTCG--GTCTC--CGGCG--CGAGGGTTCGAGTCCCTCTTAACCCGCCA
+Mycoplasma_capricolum-tRNA-Met-CAT-1                                             GGCGGGGTAGCTCAGTT-GGTT-AGAGCGTTCGGTTCATACCCGAAAG-------------------GTCGAGAGTTCAAATCTCTCCCCCGCTACCA
+Mycoplasma_capricolum-tRNA-Leu-CAA-1                                             GCCCTTTTGGCGGAATT-GGCA-GACGCATTAGACTCAAAATCTAAC-GAA----GAAA-----TTCG-TATCGGTTCGACCCCGATAAAGGGCACCA
+Mycoplasma_capricolum-tRNA-Ala-TGC-1                                             GGGCCCTTAGCTCAGCT-GGG--AGAGCACCTGCCTTGCACGCAGGGG-------------------GTCGACGGTTCGATCCCGTTAGGGTCCACCA
+Bacillus_subtilis-tRNA-Thr-TGT-1                                                 GCCGGTGTAGCTCAATT-GGT--AGAGCAACTGACTTGTAATCAGTAG-------------------GTTGGGGGTTCAAGTCCTCTTGCCGGCA---
+Bacillus_subtilis-tRNA-Val-TAC-1                                                 GGAGGATTAGCTCAGCT-GGG--AGAGCATCTGCCTTACAAGCAGAGG-------------------GTCGGCGGTTCGAGCCCGTCATCCTCCACCA
+Bacillus_subtilis-tRNA-Thr-TGT-2                                                 GCCGGTGTAGCTCAATT-GGT--AGAGCAACTGACTTGTAATCAGTAG-------------------GTTGGGGGTTCAAGTCCTCTTGCCGGCACCA
+Bacillus_subtilis-tRNA-Ala-TGC-1                                                 GGGGCCTTAGCTCAGCT-GGG--AGAGCGCCTGCTTTGCACGCAGGAG-------------------GTCAGCGGTTCGATCCCGCTAGGCTCCACCA
+Bacillus_subtilis-tRNA-Val-GAC-1                                                 GATTCCGTAGCTCAGCT-GGG--AGAGCGCTACCTTGACAGGGTAGAG-------------------GTCGCTGGTTCGAGCCCAGTCGGAATCA---
+Bacillus_subtilis-tRNA-Leu-TAG-1                                                 GCGGGTGTGGCGGAATT-GGCA-GACGCGCTAGACTTAGGATCTAGT-GTC----TTAC-----GACG-TGGGGGTTCGAGTCCCTTCACCCGCA---
+Bacillus_subtilis-tRNA-Phe-GAA-1                                                 GGCTCGGTAGCTCAGTT-GGT--AGAGCAACGGACTGAAAATCCGTGT-------------------GTCGGCGGTTCGATTCCGTCCCGAGCCA---
+Bacillus_subtilis-tRNA-Ala-GGC-1                                                 GGGGCCATAGCTCAGCT-GGG--AGAGCGCTACGCTGGCAGCGTAGAG-------------------GTCAGGGGTTCGAGCCCCCTTGGCTCCA---
+Bacillus_subtilis-tRNA-Leu-TAG-2                                                 GCGGGTGTGGCGGAATT-GGCA-GACGCGCTAGACTTAGGATCTAGT-GTC----TTTAT----GACG-TGGGGGTTCAAGTCCCTTCACCCGCA---
+Bacillus_subtilis-tRNA-Leu-CAG-1                                                 GCGGATGTGGCGGAATT-GGCA-GACGCGCTAGAATCAGGCTCTAGT-GTCT---TTAC----AGACG-TGGGGGTTCAAGTCCCTTCATCCGCACCA
+Bacillus_subtilis-tRNA-Lys-TTT-1                                                 GAGCCATTAGCTCAGTT-GGT--AGAGCATCTGACTTTTAATCAGAGG-------------------GTCGAAGGTTCGAGTCCTTCATGGCTCACCA
+Bacillus_subtilis-tRNA-Phe-GAA-2                                                 GGCTCGGTAGCTCAGTT-GGT--AGAGCAACGGACTGAAAATCCGTGT-------------------GTCGGCGGTTCGATTCCGTCCCGAGCCACCA
+Bacillus_subtilis-tRNA-Ala-TGC-2                                                 GGGGCCTTAGCTCAGCT-GGG--AGAGCGCCTGCTTTGCACGCAGGAG-------------------GTCAGCGGTTCGATCCCGCTAGGCTCCA---
+Bacillus_subtilis-tRNA-Arg-TCT-1                                                 GTCCCAGTAGCTCAGCT-GGAT-AGAGCAACGGCCTTCTAAGCCGTCG-------------------GTCGGGAGTTCGAATCTCTCCTGGGACG---
+Lactococcus_lactis-tRNA-Arg-ACG-1                                                GCAGGCGTGGCTCAACT-GGAT-AGAGTACCTGACTACGAATCAGGCG-------------------GTTGTAGGTTCGAATCCTACCGCTTGCA---
+Streptomyces_griseus-tRNA-Phe-GAA-1                                              GGCTGGGTAGCTCAGTT-GGTA-CGAGCGATCGCCTGAAAAGCGATAG-------------------GTCGCCGGTTCGATCCCGGCCCCAGCCACCA
+Streptomyces_griseus-tRNA-Gln-CTG-1                                              TGGGCTATGGTGTAATT-GGC--AACACTACGGTTTCTGGTACCGTC--------------------ATTCTAGGTTCGAGTCCTGGTAGCCCAG---
+Streptomyces_griseus-tRNA-Trp-CCA-1                                              AGGGTCGTAGCTCAATT-GGT--AGAGCACTGGTCTCCAAAACCAGCG-------------------GTTGGGGGTTCAAGTCCCTCCGGCCCTG---
+Streptomyces_griseus-tRNA-Lys-CTT-1                                              GCGCCGTTAGCTCAGTT-GGTT-AGAGCAGCTGACTCTTAATCAGCGG-------------------GTCCGGGGTTCGAGTCCCTGACGGCGCA---
+Streptomyces_griseus-tRNA-Thr-CGT-1                                              GCCGCCTTAGCTCAGTT-GGCC-AGAGCAACGCACTCGTAATGCGTAG-------------------GTCTCGGGTTCGAATCCCGAAGGCGGCT---
+Streptomyces_griseus-tRNA-Gly-GCC-1                                              GCGGACGTAGCTCAGTT-GGT--AGAGCGCAACCTTGCCAAGGTTGAG-------------------GTCGCCAGTTCGAACCTGGTCGTCCGCTCCA
+Streptomyces_griseus-tRNA-Ala-GGC-1                                              GGGGCTATAGCTCAGTT-GGT--AGAGCGCCTGCATGGCATGCAGGAG-------------------GTCAGGAGTTCAATTCTCCTTAGCTCCA---
+Streptomyces_griseus-tRNA-Ile-GAT-1                                              GGGGCTATAGCTCAGTT-GGTT-AGAGCGCATCCCTGATAAGGATGAG-------------------GCCACAGGTTCAAATCCTGTTAGCCCCACCA
+Streptomyces_griseus-tRNA-Ala-TGC-1                                              GGGGCCTTAGCTCAGTT-GGT--AGAGCGCTGCCTTTGCAAGGCAGAT-------------------GTCAGGAGTTCGAATCTCCTAGGCTCCA---
+Streptomyces_griseus-tRNA-Gly-GCC-2                                              GCGGACGTAGCTCAGTT-GGT--AGAGCGCAACCTTGCCAAGGTTGAG-------------------GTCGCCAGTTCGAACCTGGTCGTCCGCT---
+Streptomyces_griseus-tRNA-Lys-TTT-1                                              GGGCCGTTAGCTCAATT-GGTC-AGAGCAGCGGACTTTTAATCCGTTG-------------------GTTGTGGGTTCGAGTCCCACACGGCCTA---
+#=GC SS_cons                                                                     <<<<<<<..<<<<...........>>>>.<<<<<.......>>>>>..<<<<<<<.....>>>>>>>...<<<<<.......>>>>>>>>>>>>....
+#=GC RF                                                                          ==============================================------------------------============================
+//

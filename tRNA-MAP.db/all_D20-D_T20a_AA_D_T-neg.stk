@@ -1,0 +1,13 @@
+# STOCKHOLM 1.0
+#=GF AU Infernal 1.1.3
+
+Escherichia_coli-tRNA-Arg-TCT-1                                                  GCGCCCTTAGCTCAGTT-GGAT-AGAGCAACGACCTTCTAAGTCGTGG-------------------GCCGCAGGTTCGAATCCTGCAGGGCGCGCCA
+Escherichia_coli-tRNA-Gly-TCC-1                                                  GCGGGCATCGTATAAT--GGCT-ATTACCTCAGCCTTCCAAGCTGATG-------------------A-TGCGGGTTCGATTCCCGCTGCCCGCTCCA
+Bacillus_subtilis-tRNA-Tyr-GTA-1                                                 GGAGGGGTAGCGAAGT--GGCTAAACGCGGCGGACTGTAAATCCGCT-CCC----TCA------GGGTTCGGCAGTTCGAATCTGCCCCCCTCCACCA
+Lactococcus_lactis-tRNA-Ser-GCT-1                                                GGGGGGTTACTCAAGA--GGCTGAAGAGGACGGTTTGCTAAATCGTTAGGTCGG-GAAA--CCGGCG--CGAGGGTTCGAATCCCTTACCCCCCT---
+Lactococcus_lactis-tRNA-Glu-TTC-1                                                GGTCCGTTGGTCAAGG--GGTT-AAGACACCGCCTTTTCACGGCGGTA-------------------A-CACGGGTTCGAATCCCGTACGGACTA---
+Lactococcus_lactis-tRNA-Tyr-GTA-1                                                GGAAGGGTAGCGAAGA--GGCTAAACGCGGCGGACTGTAAATCCGCT------CCTTCG-GG-----TTCGGGGGTTCGAATCCCTCCCCTTCCA---
+Streptomyces_griseus-tRNA-Cys-GCA-1                                              GACCGTGTGCCCGAGA--GGCT-CAGGGGCTCGACTGCAACTCGAGTT-------------------A-CACCGGTTCGAATCCGGTCACGGTCT---
+#=GC SS_cons                                                                     <<<<<<<..<<<<...........>>>>.<<<<<.......>>>>>..<<<<<<<.....>>>>>>>...<<<<<.......>>>>>>>>>>>>....
+#=GC RF                                                                          =============================-----------------------------------------============================
+//
