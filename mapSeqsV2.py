@@ -783,3 +783,5 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                 protPos[iso][pos] = '-'
                     
     return tRNAseqs, posScores, protPos
+
+main()
