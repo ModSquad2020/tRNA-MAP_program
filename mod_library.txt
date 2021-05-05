@@ -3,7 +3,7 @@ lm	t6A	37	A	./tRNA-MAP.db/t6A_37-lm-augmented.txt	./tRNA-MAP.db/TsaD.hmm
 #cp	i6A	37	A	C	36	0.0	1.0	./tRNA-MAP.db/MiaA.hmm
 covariance_model	mod_short_name	sprinzl_position	reference_base	positive_cm	negative_cm	protein_hmm	comments
 cm	s4U	8	U	./tRNA-MAP.db/all_s4U-s4U_T8_AA_AC_D_V-pos.cm	./tRNA-MAP.db/all_s4U-s4U_T8_AA_AC_D_V-neg.cm	./tRNA-MAP.db/ThiI.hmm	built using all 5 training species, with jackknifing
-cm	m7G	46	G	./tRNA-MAP.db/all_sp_m7G-m7G_G46_D_T_V-pos.cm	./tRNA-MAP.db/all_sp_m7G-m7G_G46_D_T_V-neg.cm	./tRNA-MAP.db/TrmB.hmm	built with E. coli, B. subtilis, M. capricolum, L. lactis, with no jackknife step
+cm	m7G	46	G	./tRNA-MAP.db/m7G_CMs-m7G_G46_D_T_V-pos.cm	./tRNA-MAP.db/m7G_CMs-m7G_G46_D_T_V-neg.cm	./tRNA-MAP.db/TrmB.hmm	built with E. coli, B. subtilis, M. capricolum, L. lactis, with no jackknife step
 cm	D	17	U	./tRNA-MAP.db/all_D20-D_T17_AA_AC_D_T-pos.cm	./tRNA-MAP.db/all_D20-D_T17_AA_AC_D_T-neg.cm	./tRNA-MAP.db/DusB.hmm	not yet validated with external data, but made great true positive predictions
 cm	D	20	U	./tRNA-MAP.db/all_D20-D_T20_AC_D_T-pos.cm	./tRNA-MAP.db/all_D20-D_T20_AC_D_T-neg.cm	./tRNA-MAP.db/DusA.hmm	not yet validated with external data, but made great true positive predictions
 cm	D	20a	U	./tRNA-MAP.db/all_D20-D_T20a_AA_D_T-pos.cm	./tRNA-MAP.db/all_D20-D_T20a_AA_D_T-neg.cm	./tRNA-MAP.db/DusA.hmm	not yet validated with external data, but made great true positive predictions
