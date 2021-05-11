@@ -18,6 +18,7 @@ Output:
 - finish writing mod call function. 
  - Change so that all possible predicted mods are written as comma-separated lists
  - Kicks can down the road of predicting which tRNAs have a combined modification (like ms2i6A/ms2t6A)
+ - 
 
 """
 
@@ -130,7 +131,7 @@ def lmPredict(alignDict, lmFile):
           
         #Predict using linear model
         tRNAprob = linearModel.predict(tRNAencode)
-        
+        print(tRNA, pos, tRNAprob)
         predDict[tRNA] = 0.5*(float(tRNAprob)+1) #######THIS IS A PLACEHOLDER!! GOTTA FIGURE OUT HOW TO CONVERT TO PROBABILITIES!!!!!
     
     return predDict
@@ -661,12 +662,13 @@ def main(inCl = True, ssFile = None, domain = None,
     callFile = '{0}/modCalls.txt'.format(outputFile)
     scoreFile = '{0}/modScores.txt'.format(outputFile)
     protFile = '{0}/protHits.txt'.format(outputFile)
+    protScoreFile = '{0}/protScores.txt'.format(outputFile)
     
     #Get gaps
     allGaps = getPositions(positionLists)
     
     #Modify tRNA sequences
-    modSeqs, modScores, protHitPos = modifySeqs(allPreds, tRNApos, allCMs, modInfo, nameMap, allGaps, protHits)
+    modSeqs, modScores, protHitPos, protScores = modifySeqs(allPreds, tRNApos, allCMs, modInfo, nameMap, allGaps, protHits)
     
     columns = ['tRNA'] + allGaps
     
@@ -676,8 +678,10 @@ def main(inCl = True, ssFile = None, domain = None,
     writeTSV(scoreFile, modScores, columns)
     #Output protein hits
     writeTSV(protFile, protHitPos, columns)
+    #Output protein hits
+    writeTSV(protScoreFile, protScores, columns)
     
-    return callFile, scoreFile
+    return callFile, scoreFile, protFile, protScoreFile
 
 def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHits):
     """Compile mod predictions from different sources"""
@@ -689,7 +693,8 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
     
     tRNAseqs = dict() #Store modified tRNA sequences
     posScores = dict() #Store associated mod scores
-    protPos = dict()
+    protPos = dict() #Store predicted protein accessions
+    protScores = dict() #Store protein hit bit scores
     
     #reorder into isodecoder names
     isoAlign = {}
@@ -701,6 +706,7 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
         tRNAseqs[iso] = {}
         posScores[iso] = {}
         protPos[iso] = {}
+        protScores[iso] = {}
         
         #Iterate through sprinzl positions in the tRNA
         for pos in allPos:
@@ -748,15 +754,15 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                                         exceptionBreaker = preds['cm'][modTag]
                                         modScore = 0 #############################################Change this do a no data value
                                         
-                            posHits.append([modTag, round(bit2prob(modScore), 2), protHits[modTag]['hit']])
+                            posHits.append([modTag, round(bit2prob(modScore), 2), protHits[modTag]['hit'], protHits[modTag]['score']])
                         
                         except KeyError:
                             
                             try: #Handle conditional prob (and soon linear regression)
-                                posHits.append([modTag, round(preds['lm'][modTag][iso], 2), protHits[modTag]['hit']])
+                                posHits.append([modTag, round(preds['lm'][modTag][iso], 2), protHits[modTag]['hit'], protHits[modTag]['score']])
                             
                             except KeyError: #Handle constitutive modifications
-                                posHits.append([modTag, preds['cs'][modTag]['score'], protHits[modTag]['hit']])
+                                posHits.append([modTag, 1, protHits[modTag]['hit'], protHits[modTag]['score']])
                     
                     else:
                         
@@ -766,22 +772,26 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                 
                 
                 #Sorted score values
-                sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2]), reverse = True) 
+                sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2], score[3]), reverse = True) 
                 
                 sortedLabels = [x[0].split('_')[0] for x in sortedHits]
                 sortedScores = [str(x[1]) for x in sortedHits]
                 sortedProtes = [x[2] for x in sortedHits]
+                protScoresList = [str(x[3]) for x in sortedHits]
                 
                 #Add prediction data to sequence
                 tRNAseqs[iso][pos] = ','.join(sortedLabels)
                 posScores[iso][pos] = ','.join(sortedScores)
                 protPos[iso][pos] = ','.join(sortedProtes)
+                protScores[iso][pos] = ','.join(protScoresList)
                 
             else:
                 tRNAseqs[iso][pos] = base
                 posScores[iso][pos] = '-'
                 protPos[iso][pos] = '-'
+                protScores[iso][pos] = '-'
                     
-    return tRNAseqs, posScores, protPos
+    return tRNAseqs, posScores, protPos, protScores
 
-main()
+if __name__ == '__main__':
+    main()
