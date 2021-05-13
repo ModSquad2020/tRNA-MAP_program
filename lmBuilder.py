@@ -6,7 +6,7 @@ inputs:
 -m Modification short name (ex: s4U, m7G, acp3U)
 -p Sprinzl position of the modification (ex: 8, 46, 47, e13)
 -o output text file name 
---ignore_positions: Specify Sprinzl positions to ignore. Default is 74, 75, 76 beause of some weirdness with the gaps there.
+--ignore_positions: Specify Sprinzl positions to ignore. Default is 74, 75, 76 beause of some weirdness with the gaps there. Use if a column has signal, but probably not due to biology
 --rsquared_cutoff: specify R-squared value cutoff for each predictor column. Will use predictor variable columns at or above this cutoff
 --exclude_species: Excludes specified species
 
@@ -14,7 +14,22 @@ output:
 tsv-formatted text file with data columns. Can be used in mapSeqsV2.py
 
 Program description:
-Reads in Modomics
+1) Reads in Modomics-formatted TSV file
+2) Filters out tRNAs with the wrong base at the modified position; and those specified to skip
+3) Encodes each column in onehot
+3) Builds a 1-variable linear model for each column in the dataset (skipping any positions specified by the --ignore_positions option)
+4) Calculates and stores R-squared for each column
+4) Combines columns at or above the specified R-squared cutoff
+5) Encodes combined columns in onehot
+6) Builds combined linear model
+7) Writes output file
+
+Dependencies:
+- scikit-learn
+- numpy
+
+Future work:
+- Graphical summary of each LM predictor and combined model
 
 """
 
@@ -206,8 +221,11 @@ def lmBuild(lmData, Truth, names, cols, R2cut, colKey, skipCols):
         
     #Add together all columns that make the cutoff
     lmPos = []
+    
+    print('Sorted predictor variables') #Print interesting info
+    print('R-squared\ttRNA position')
     for score in sorted(scoreDict.keys(), reverse = True):
-        
+        print(score, '\t', ', '.join(scoreDict[score])) #Print interesting info
         #Add position of above cutoff
         if score >= R2cut:
             lmPos += scoreDict[score]      
@@ -217,8 +235,10 @@ def lmBuild(lmData, Truth, names, cols, R2cut, colKey, skipCols):
     newModel = []
     orderedLMpos = []
     #Iterate through each sequence, make sure lm positions are in correct spot
+    
     for seqName in lmData.keys():
         
+       
         #Store relevant sequence positions
         newSeq = []
         singleLMpos = [] #Store lm columns in correct order!
@@ -246,6 +266,13 @@ def lmBuild(lmData, Truth, names, cols, R2cut, colKey, skipCols):
     
     #Score new linear model:
     combinedScore = combinedLM.score(newEncode, predState)
+    
+    #Output summary data
+    print('\n') 
+    print('R-squared cutoff: {0}'.format(R2cut))
+    print('Predictors used: {0}'.format(', '.join(orderedLMpos[0])))
+    print('Combined R-squared: {0}'.format(combinedScore))
+    print('\n')
     
     return combinedScore, newModel, orderedLMpos[0]
         
