@@ -131,7 +131,7 @@ def lmPredict(alignDict, lmFile):
           
         #Predict using linear model
         tRNAprob = linearModel.predict(tRNAencode)
-        print(tRNA, pos, tRNAprob)
+        
         predDict[tRNA] = 0.5*(float(tRNAprob)+1) #######THIS IS A PLACEHOLDER!! GOTTA FIGURE OUT HOW TO CONVERT TO PROBABILITIES!!!!!
     
     return predDict
@@ -238,7 +238,7 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
     
     #Read through files from sprinzl position namer.
     sprinzlFiles = os.listdir(outD)
-        
+    
     #Store CM results for each mod
     predResults = {}
     
@@ -597,10 +597,122 @@ def nameIsodecoders(inputFile):
     
     return isoacceptors, isoFastaDict, scanNameToIsoName
     
+def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHits):
+    """Compile mod predictions from different sources"""
+    # 1) iterate through the tRNAs in the isodecoder set
+    # 2) at each position check if a mod is possible
+    #  a) if 2+ mods possible, select one with best score. (how to decide non-probabilistic and probabilistic mods occur together?)
+    #  b) if 1 mod possible, see if score is more likely or less likely to happen. Write more likely mod
+    # 3) if mod possible, 
+    
+    tRNAseqs = dict() #Store modified tRNA sequences
+    posScores = dict() #Store associated mod scores
+    protPos = dict() #Store predicted protein accessions
+    protScores = dict() #Store protein hit bit scores
+    
+    #reorder into isodecoder names
+    isoAlign = {}
+    for tRNA in isos.keys():
+        isoAlign[nameMap[tRNA.split('-')[0]]] = isos[tRNA]
+            
+    #Write results to file
+    for iso in sorted(isoAlign.keys()):
+        tRNAseqs[iso] = {}
+        posScores[iso] = {}
+        protPos[iso] = {}
+        protScores[iso] = {}
+        
+        #Iterate through sprinzl positions in the tRNA
+        for pos in allPos:
+            
+            #Handle extra gaps
+            try:
+                base = isoAlign[iso][pos].upper()
+                
+                if base.upper() == 'T':
+                    base = 'U'
+            
+            except KeyError:
+                base = '-'
+            
+            posTag = '_'.join([pos, base])
+            
+            if posTag in modPositions.keys():
+                
+                posHits = []
+                
+                for modTag in modPositions[posTag]:
+                    
+                    if protHits[modTag] != None:
+                        
+                        try: #Handle when covariance model is used
+                            cmResults = preds['cm']
+                            
+                            modScore = float()
+                            
+                            try: #Handle when hits to both are present
+                                modScore = float(preds['cm'][modTag]['posResults'][iso])-float(preds['cm'][modTag]['negResults'][iso])
+                                
+                            except KeyError:
+                                
+                                try: #No positive hit
+                                    modScore = float( 0 - float(preds['cm'][modTag]['negResults'][iso]))
+                                    
+                                except KeyError:
+                                    
+                                    try: #no negative hit
+                                        modScore = float(float(preds['cm'][modTag]['posResults'][iso]) - 0)
+                                        
+                                    except KeyError: #No hit to either
+                                        
+                                        exceptionBreaker = preds['cm'][modTag]
+                                        modScore = 0 #############################################Change this do a no data value
+                                       
+                            posHits.append([modTag, round(bit2prob(modScore), 2), protHits[modTag]['hit'], protHits[modTag]['score']])
+                        
+                        except KeyError:
+                            
+                            try: #Handle conditional prob (and soon linear regression)
+                                posHits.append([modTag, round(preds['lm'][modTag][iso], 2), protHits[modTag]['hit'], protHits[modTag]['score']])
+                            
+                            except KeyError: #Handle constitutive modifications
+                                posHits.append([modTag, 1, protHits[modTag]['hit'], protHits[modTag]['score']])
+                    
+                    else:
+                        
+                        tRNAseqs[iso][pos] = base
+                        posScores[iso][pos] = '-'
+                        protPos[iso][pos] = '-'
+                        protScores[iso][pos] = '-'
+                
+                
+                #Sorted score values
+                sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2], score[3]), reverse = True) 
+                
+                sortedLabels = [x[0].split('_')[0] for x in sortedHits]
+                sortedScores = [str(x[1]) for x in sortedHits]
+                sortedProtes = [x[2] for x in sortedHits]
+                protScoresList = [str(x[3]) for x in sortedHits]
+                
+                #Add prediction data to sequence
+                tRNAseqs[iso][pos] = ','.join(sortedLabels)
+                posScores[iso][pos] = ','.join(sortedScores)
+                protPos[iso][pos] = ','.join(sortedProtes)
+                protScores[iso][pos] = ','.join(protScoresList)
+                
+            else:
+                tRNAseqs[iso][pos] = base
+                posScores[iso][pos] = '-'
+                protPos[iso][pos] = '-'
+                protScores[iso][pos] = '-'
+                    
+    return tRNAseqs, posScores, protPos, protScores
+    
 def main(inCl = True, ssFile = None, domain = None, 
          outputFile = None, modInfo = './CMlibrary.txt', skipSpr = False, 
          eCut = 1e-6, protSeqs = None):
     """Execute commands"""
+    
     import os
     
     #Recieve command line args
@@ -631,7 +743,7 @@ def main(inCl = True, ssFile = None, domain = None,
     
     #Give isodecoders GtRNAdb names
     isoInfo, fastaSeqs, nameMap = nameIsodecoders(ssFile)
-        
+    
     outD = '{0}/sprinzl_alignments'.format(tempDir)
         
     if skipSpr == False:
@@ -682,116 +794,6 @@ def main(inCl = True, ssFile = None, domain = None,
     writeTSV(protScoreFile, protScores, columns)
     
     return callFile, scoreFile, protFile, protScoreFile
-
-def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHits):
-    """Compile mod predictions from different sources"""
-    # 1) iterate through the tRNAs in the isodecoder set
-    # 2) at each position check if a mod is possible
-    #  a) if 2+ mods possible, select one with best score. (how to decide non-probabilistic and probabilistic mods occur together?)
-    #  b) if 1 mod possible, see if score is more likely or less likely to happen. Write more likely mod
-    # 3) if mod possible, 
-    
-    tRNAseqs = dict() #Store modified tRNA sequences
-    posScores = dict() #Store associated mod scores
-    protPos = dict() #Store predicted protein accessions
-    protScores = dict() #Store protein hit bit scores
-    
-    #reorder into isodecoder names
-    isoAlign = {}
-    for tRNA in isos.keys():
-        isoAlign[nameMap[tRNA.split('-')[0]]] = isos[tRNA]
-            
-    #Write results to file
-    for iso in sorted(isoAlign.keys()):
-        tRNAseqs[iso] = {}
-        posScores[iso] = {}
-        protPos[iso] = {}
-        protScores[iso] = {}
-        
-        #Iterate through sprinzl positions in the tRNA
-        for pos in allPos:
-            
-            #Handle extra gaps
-            try:
-                base = isoAlign[iso][pos].upper()
-                
-                if base.upper() == 'T':
-                    base = 'U'
-            
-            except KeyError:
-                base = '-'
-            
-            posTag = '_'.join([pos, base])
-            
-            if posTag in modPositions.keys():
-                
-                posHits = []
-                
-                for modTag in modPositions[posTag]:
-                    
-                    if protHits[modTag] != False:
-                        
-                        try: #Handle when covariance model is used
-                            cmResults = preds['cm']
-                            
-                            modScore = float()
-                            
-                            try: #Handle when hits to both are present
-                                modScore = float(preds['cm'][modTag]['posResults'][iso])-float(preds['cm'][modTag]['negResults'][iso])
-                                
-                            except KeyError:
-                                
-                                try: #No positive hit
-                                    modScore = float( 0 - float(preds['cm'][modTag]['negResults'][iso]))
-                                    
-                                except KeyError:
-                                    
-                                    try: #no negative hit
-                                        modScore = float(float(preds['cm'][modTag]['posResults'][iso]) - 0)
-                                        
-                                    except KeyError: #No hit to either
-                                        
-                                        exceptionBreaker = preds['cm'][modTag]
-                                        modScore = 0 #############################################Change this do a no data value
-                                        
-                            posHits.append([modTag, round(bit2prob(modScore), 2), protHits[modTag]['hit'], protHits[modTag]['score']])
-                        
-                        except KeyError:
-                            
-                            try: #Handle conditional prob (and soon linear regression)
-                                posHits.append([modTag, round(preds['lm'][modTag][iso], 2), protHits[modTag]['hit'], protHits[modTag]['score']])
-                            
-                            except KeyError: #Handle constitutive modifications
-                                posHits.append([modTag, 1, protHits[modTag]['hit'], protHits[modTag]['score']])
-                    
-                    else:
-                        
-                        tRNAseqs[iso][pos] = base
-                        posScores[iso][pos] = '-'
-                        protPos[iso][pos] = '-'
-                
-                
-                #Sorted score values
-                sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2], score[3]), reverse = True) 
-                
-                sortedLabels = [x[0].split('_')[0] for x in sortedHits]
-                sortedScores = [str(x[1]) for x in sortedHits]
-                sortedProtes = [x[2] for x in sortedHits]
-                protScoresList = [str(x[3]) for x in sortedHits]
-                
-                #Add prediction data to sequence
-                tRNAseqs[iso][pos] = ','.join(sortedLabels)
-                posScores[iso][pos] = ','.join(sortedScores)
-                protPos[iso][pos] = ','.join(sortedProtes)
-                protScores[iso][pos] = ','.join(protScoresList)
-                
-            else:
-                tRNAseqs[iso][pos] = base
-                posScores[iso][pos] = '-'
-                protPos[iso][pos] = '-'
-                protScores[iso][pos] = '-'
-                    
-    return tRNAseqs, posScores, protPos, protScores
 
 if __name__ == '__main__':
     main()
