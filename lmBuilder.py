@@ -1,22 +1,36 @@
-#!/usr/bin/env python
-# coding: utf-8
+"""
+Build linear regression models
 
-# In[23]:
+inputs:
+-d data file (Modomics TSV or similarly-formatted file)
+-m Modification short name (ex: s4U, m7G, acp3U)
+-p Sprinzl position of the modification (ex: 8, 46, 47, e13)
+-o output text file name 
+--ignore_positions: Specify Sprinzl positions to ignore. Default is 74, 75, 76 beause of some weirdness with the gaps there.
+--rsquared_cutoff: specify R-squared value cutoff for each predictor column. Will use predictor variable columns at or above this cutoff
+--exclude_species: Excludes specified species
 
+output:
+tsv-formatted text file with data columns. Can be used in mapSeqsV2.py
+
+Program description:
+Reads in Modomics
+
+"""
 
 def parseInput():
     """Parse command line input and output files"""
     import argparse
     
     #Argparse setup
-    argParser = argparse.ArgumentParser(description = 'This program generates track hubs that display Modomics data')
-    argParser.add_argument('-d', '--data_files', required = True, help = 'data reference file')
+    argParser = argparse.ArgumentParser(description = 'Build a linear model from modification data TSV file')
+    argParser.add_argument('-d', '--data_files', required = True, help = 'data reference file, formatted same as Modomics TSV')
     argParser.add_argument('-m', '--modification', required = True, help = 'modification short name')
     argParser.add_argument('-p', '--position', required = True, help = 'sprinzl alignment position')
     argParser.add_argument('-o', '--output_file', required = True, help = 'sprinzl alignment position')
     argParser.add_argument('--ignore_positions', required = False, nargs = '*', default = ['74', '75', '76'], help = 'ignore specified positions. Default ignores 74, 75 and 76 (CCA tail) due to random sequences missing it')
     argParser.add_argument('--rsquared_cutoff', required = False, default = 0.15, help = 'R-squared cutoff for individual columns')
-    argParser.add_argument('--exclude_species', required = False, nargs = '*', help = 'exclude species, specified by species name in data file. ex: Streptomyces_griseus')
+    argParser.add_argument('--exclude_species', required = False, default = [], nargs = '*', help = 'exclude species, specified by species name in data file. ex: Streptomyces_griseus')
     
     
     kingdoms = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
@@ -89,7 +103,6 @@ def cleanNfilter(data, posKey, mod, refPos, exclSp):
         if sp in exclSp:
             pass
         else:
-        
             #Iterate through each position and back-translate to original base
             for pos, resi in zip(posKey, data[seqName]):
 
@@ -255,10 +268,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# In[ ]:
-
-
-
-
