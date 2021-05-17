@@ -40,7 +40,9 @@ def parseInput():
     #Store domain names
     domains = {'E': 'Eukaryota', 'A': 'Archaea', 'B': 'Bacteria'}
     
+    #'-s ./secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./validation_testing/strePneu-lmLibrary -p ./test_proteomes/strePneu-GCF_000006885.1_ASM688v1_protein.faa -d B --mod_database ./lm_mod_library.txt'.split()
     #'-s ../SlicerV2/data/secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./work/strepneumo_test/ -p ./work/strepneumo_test/GCF_000006885.1_ASM688v1_protein.faa -d B --cpu 3'.split()
+    #'-s ./secStruct/strePneu_TIGR4-tRNAs.ss.sort -o ./work/strepneumo_test/ -p ./test_proteomes/strePneu-GCF_000006885.1_ASM688v1_protein.faa -d B'.split()
     clArgs = argParser.parse_args()
     tRNAstruct = clArgs.tRNAscan_ss
     orgDom = domains[clArgs.domain.upper()]
@@ -152,6 +154,7 @@ def writeTSV(fName, data, columns, delim = '\t', nd = '-'): #add in columns.
                 #Write data or no data char if col not present
                 try:
                     try:
+                        
                         outF.write(delim + data[line][pos])
                     except TypeError:
                         try: #Handle when we have a float
@@ -245,6 +248,38 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
     #Store positions for each tRNA
     posLists = {}
     
+    #Iterate through sprinzl alignments
+    for file in sprinzlFiles:
+
+        #Define relevant file names
+        fName = '{0}/{1}'.format(outD, file)
+        tRNAscanID = '.'.join(file.split('.')[:-1])
+
+        #Skip tmp files
+        if fName.split('.')[-1] == 'pos':
+
+            #Read file
+            sequence, position, posDict = sortPositions(fName)
+            
+            tRNAseq[tRNAscanID] = sequence
+            tRNApos[tRNAscanID] = posDict
+            posLists[tRNAscanID] = position
+                
+            #Sort by isodecoders:
+            try:
+                isoDict[sequence].append(tRNAscanID)
+            except:
+                isoDict[sequence] = [tRNAscanID]
+            
+        else:
+            pass
+        
+    #Re-pair sequences with isoacceptor names
+    for seq in isoDict.keys():
+        for ID in isoDict[seq]:
+            faDict[nameMap[ID.split('-')[0]]] = seq
+            isoPosDict[nameMap[ID.split('-')[0]]] = tRNApos[ID]
+    
     #Iterate through specified CMs:
     for cm in allCMs.keys():
         
@@ -254,7 +289,7 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
         
         predResults['_'.join([refMod, refPos, refBase])] = {}
         
-        #Iterate through sprinzl alignments
+        """#Iterate through sprinzl alignments
         for file in sprinzlFiles:
 
             #Define relevant file names
@@ -268,7 +303,7 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
                 sequence, position, posDict = sortPositions(fName)
 
                 if posDict[refPos] == refBase:
-                    
+
                     tRNAseq[tRNAscanID] = sequence
                     tRNApos[tRNAscanID] = posDict
                     posLists[tRNAscanID] = position
@@ -282,12 +317,12 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
                     pass
             else:
                 pass
-        
-        #Re-pair sequences with isoacceptor names
-        for seq in isoDict.keys():
-            for ID in isoDict[seq]:
-                faDict[nameMap[ID.split('-')[0]]] = seq
-                isoPosDict[nameMap[ID.split('-')[0]]] = tRNApos[ID]
+
+            #Re-pair sequences with isoacceptor names
+            for seq in isoDict.keys():
+                for ID in isoDict[seq]:
+                    faDict[nameMap[ID.split('-')[0]]] = seq
+                    isoPosDict[nameMap[ID.split('-')[0]]] = tRNApos[ID]"""
         
         #Write modifiable sequences into fasta file for cmSearch
         faName = '{0}/{1}_{2}.fasta'.format(tempDir, refPos, refBase)
