@@ -219,7 +219,7 @@ def predictProteins(protSeqs, HMM, eCutoff, temp, cpus):
         if protHits[hit][1] <= eCutoff and protHits[hit][0] == max(hitScores):
             return {'hit': hit, 'score': protHits[hit][2]}
         elif protHits[hit][1] > eCutoff and protHits[hit][0] < max(hitScores):
-            return False
+            return None
 
         
 def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
@@ -709,7 +709,7 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                             
                             try: #Handle conditional prob (and soon linear regression)
                                 posHits.append([modTag, round(preds['lm'][modTag][iso], 2), protHits[modTag]['hit'], protHits[modTag]['score']])
-                            
+                                
                             except KeyError: #Handle constitutive modifications
                                 posHits.append([modTag, 1, protHits[modTag]['hit'], protHits[modTag]['score']])
                     
