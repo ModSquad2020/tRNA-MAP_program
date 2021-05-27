@@ -289,41 +289,6 @@ def searchCMs(allCMs, nameMap, outD, tempDir, cpus):
         
         predResults['_'.join([refMod, refPos, refBase])] = {}
         
-        """#Iterate through sprinzl alignments
-        for file in sprinzlFiles:
-
-            #Define relevant file names
-            fName = '{0}/{1}'.format(outD, file)
-            tRNAscanID = '.'.join(file.split('.')[:-1])
-
-            #Skip tmp files
-            if fName.split('.')[-1] == 'pos':
-
-                #Read file
-                sequence, position, posDict = sortPositions(fName)
-
-                if posDict[refPos] == refBase:
-
-                    tRNAseq[tRNAscanID] = sequence
-                    tRNApos[tRNAscanID] = posDict
-                    posLists[tRNAscanID] = position
-
-                    #Sort by isodecoders:
-                    try:
-                        isoDict[sequence].append(tRNAscanID)
-                    except KeyError:
-                        isoDict[sequence] = [tRNAscanID]
-                else:
-                    pass
-            else:
-                pass
-
-            #Re-pair sequences with isoacceptor names
-            for seq in isoDict.keys():
-                for ID in isoDict[seq]:
-                    faDict[nameMap[ID.split('-')[0]]] = seq
-                    isoPosDict[nameMap[ID.split('-')[0]]] = tRNApos[ID]"""
-        
         #Write modifiable sequences into fasta file for cmSearch
         faName = '{0}/{1}_{2}.fasta'.format(tempDir, refPos, refBase)
         writeFasta(faName, faDict)
@@ -713,6 +678,22 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                             except KeyError: #Handle constitutive modifications
                                 posHits.append([modTag, 1, protHits[modTag]['hit'], protHits[modTag]['score']])
                     
+                    
+                        #Sorted score values
+                        sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2], score[3]), reverse = True) 
+
+                        sortedLabels = [x[0].split('_')[0] for x in sortedHits]
+                        sortedScores = [str(x[1]) for x in sortedHits]
+                        sortedProtes = [x[2] for x in sortedHits]
+                        protScoresList = [str(x[3]) for x in sortedHits]
+
+                        #Add prediction data to sequence
+                        tRNAseqs[iso][pos] = ','.join(sortedLabels)
+                        posScores[iso][pos] = ','.join(sortedScores)
+                        protPos[iso][pos] = ','.join(sortedProtes)
+                        protScores[iso][pos] = ','.join(protScoresList)
+                    
+                    
                     else:
                         
                         tRNAseqs[iso][pos] = base
@@ -720,27 +701,12 @@ def modifySeqs(preds, isos, searhchedMods, modPositions, nameMap, allPos, protHi
                         protPos[iso][pos] = '-'
                         protScores[iso][pos] = '-'
                 
-                
-                #Sorted score values
-                sortedHits = sorted(posHits, key = lambda score: (score[1], score[0], score[2], score[3]), reverse = True) 
-                
-                sortedLabels = [x[0].split('_')[0] for x in sortedHits]
-                sortedScores = [str(x[1]) for x in sortedHits]
-                sortedProtes = [x[2] for x in sortedHits]
-                protScoresList = [str(x[3]) for x in sortedHits]
-                
-                #Add prediction data to sequence
-                tRNAseqs[iso][pos] = ','.join(sortedLabels)
-                posScores[iso][pos] = ','.join(sortedScores)
-                protPos[iso][pos] = ','.join(sortedProtes)
-                protScores[iso][pos] = ','.join(protScoresList)
-                
             else:
                 tRNAseqs[iso][pos] = base
                 posScores[iso][pos] = '-'
                 protPos[iso][pos] = '-'
                 protScores[iso][pos] = '-'
-                    
+    
     return tRNAseqs, posScores, protPos, protScores
     
 def main(inCl = True, ssFile = None, domain = None, 
@@ -810,6 +776,8 @@ def main(inCl = True, ssFile = None, domain = None,
     scoreFile = '{0}/modScores.txt'.format(outputFile)
     protFile = '{0}/protHits.txt'.format(outputFile)
     protScoreFile = '{0}/protScores.txt'.format(outputFile)
+    summaryFile = '{0}/summaryFile.txt'.format(outputFile)
+    
     
     #Get gaps
     allGaps = getPositions(positionLists)
@@ -828,7 +796,29 @@ def main(inCl = True, ssFile = None, domain = None,
     #Output protein hits
     writeTSV(protScoreFile, protScores, columns)
     
+    writeSummaryFile(summaryFile, modSeqs, modScores, protHitPos, protScores)
+    
     return callFile, scoreFile, protFile, protScoreFile
+
+def writeSummaryFile(outFile, modSeqs, modScores, protHitPos, protScores):
+    """Write a summary output file that is easier to read with a machine"""
+    
+    with open(outFile, 'w') as outF:
+        
+        outF.write('tRNA name\tsprinzl position\tprediction\tprobability\tpredicted protein\tprotein bit score\n')
+        
+        for tRNA in modSeqs.keys():
+            for pos in modSeqs[tRNA].keys():
+                for mod, score, prot, bit in zip(modSeqs[tRNA][pos].split(','), 
+                                                 modScores[tRNA][pos].split(','), 
+                                                 protHitPos[tRNA][pos].split(','),
+                                                 protScores[tRNA][pos].split(',')):
+                    
+                    outF.write('tRNA-{0}\t{1}\t{2}\t{3}\t{4}\t{5}\n'.format(tRNA, pos, mod, score, prot, bit))
+                    
+        outF.close()
+            
+    
 
 if __name__ == '__main__':
     main()
