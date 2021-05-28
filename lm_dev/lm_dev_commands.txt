@@ -1,0 +1,41 @@
+#Body mods
+s4U	8	no S. griseus	python3 lmBuilder.py -m s4U -p 8 -o ./lm_dev/s4U8_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.01 --exclude_species Streptomyces_griseus > ./lm_dev/s4U8_stats.txt
+Cm	13	S. griseus	python3 lmBuilder.py -m Cm -p 13 -o ./lm_dev/Cm13_Sgresius_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Escherichia_coli > ./lm_dev/Cm13_Sgriseus_stats.txt
+D	16	E. coli	python3 lmBuilder.py -m D -p 16 -o ./lm_dev/D16_Ecoli_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/D16_Ecoli_stats.txt
+D	17	all	python3 lmBuilder.py -m D -p 17 -o ./lm_dev/D17_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 > ./lm_dev/D17_stats.txt
+Gm	18	E. coli	python3 lmBuilder.py -m Gm -p 18 -o ./lm_dev/Gm18_Sgresius_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/Gm18_Ecoli_stats.txt
+D	20	all	python3 lmBuilder.py -m D -p 20 -o ./lm_dev/D20_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 > ./lm_dev/D20_stats.txt
+D	20a	all	python3 lmBuilder.py -m D -p 20a -o ./lm_dev/D20a_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 > ./lm_dev/D20a_stats.txt
+m1A	22	No S. griseus or E. coli	python3 lmBuilder.py -m m1A -p 22 -o ./lm_dev/m1A22_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Streptomyces_griseus Escherichia_coli> ./lm_dev/m1A22_stats.txt
+m7G	46	all	python3 lmBuilder.py -m m7G -p 46 -o ./lm_dev/m7G46_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 > ./lm_dev/m7G46_stats.txt
+acp3U	47	E. coli	python3 lmBuilder.py -m acp3U -p 47 -o ./lm_dev/acp3U47_Ecoli_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/acp3U47_Ecoli_stats.txt
+m1A	58	S. griseus	python3 lmBuilder.py -m m1A -p 58 -o ./lm_dev/m1A58_Sgresius_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Escherichia_coli > ./lm_dev/m1A58_Sgriseus_stats.txt
+
+#Anticodon mods
+ho5U	34	no S.griseus	python3 lmBuilder.py -m ho5U -p 34 -o ./lm_dev/ho5U34_linear_model.txt -d ./lm_dev/ho5U-gold.txt > ./lm_dev/ho5U34_stats.txt
+xnm5U	34	no S.griseus	python3 lmBuilder.py -m nm5U -p 34 -o ./lm_dev/xnm5U34_linear_model.txt -d ./lm_dev/xnm5U-gold.txt > ./lm_dev/xnm5U34_stats.txt
+s2U	34	no S.griseus	python3 lmBuilder.py -m s2U -p 34 -o ./lm_dev/s2U34_linear_model.txt -d ./lm_dev/s2U-gold.txt > ./lm_dev/s2U34_stats.txt
+QtRNA	34	B. subtilis and E. coli	python3 lmBuilder.py -m QtRNA -p 34 -o ./lm_dev/QtRNA34_linear_model.txt -d ./lm_dev/QtRNA_gold.txt --rsquared_cutoff 0.1 --exclude_species Lactococcus_lactis Streptomyces_griseus Mycoplasma_capricolum > ./lm_dev/QtRNA34_stats.txt
+I	34	all	python3 lmBuilder.py -m I -p 34 -o ./lm_dev/I34_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt > ./lm_dev/I34_stats.txt
+m1G	37	All	python3 lmBuilder.py -m m1G -p 37 -o ./lm_dev/m1G37_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 > ./lm_dev/m1G37_stats.txt
+i6A	37	All	python3 lmBuilder.py -m i6A -p 37 -o ./lm_dev/i6A37_linear_model.txt -d ./lm_dev/i6A_all-gold-training.txt --rsquared_cutoff 0.1 --exclude_species Mycoplasma_capricolum > ./lm_dev/i6A37_stats.txt
+t6A	37	All	python3 lmBuilder.py -m t6A -p 37 -o ./lm_dev/t6A37_linear_model.txt -d ./lm_dev/t6A_all-gold-training.txt --rsquared_cutoff 0.1 > ./lm_dev/t6A37_stats.txt
+ms2A	37	No S. griseus, M. capricolum	python3 lmBuilder.py -m ms2A -p 37 -o ./lm_dev/ms2A37_linear_model.txt -d ./lm_dev/ms2A37_all-gold-training.txt --rsquared_cutoff 0.1 > ./lm_dev/ms2A37_stats.txt
+m2A	37	E. coli	python3 lmBuilder.py -m m2A -p 37 -o ./lm_dev/m2A37_Ecoli_linear_model.txt -d ./lm_dev/m2A37-gold.txt > ./lm_dev/m2A37_Ecoli_stats.txt
+m6A	37	No S. griseus	python3 lmBuilder.py -m m6A -p 37 -o ./lm_dev/m6A37_linear_model.txt -d ./lm_dev/m6A37_all-gold-training.txt --rsquared_cutoff 0.1 > ./lm_dev/m6A37_stats.txt
+Y	39	No S. griseus or L. lactis	python3 lmBuilder.py -m Y -p 39 -o ./lm_dev/Y39_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Lactococcus_lactis Streptomyces_griseus > ./lm_dev/Y39_stats.txt
+
+
+#####
+#Lets try making s4U models for individual species and see if there is more signal there...
+s4U	8	E. coli	python3 lmBuilder.py -m s4U -p 8 -o ./lm_dev/s4U_sp/s4U8_Ecoli_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.01 --exclude_species Bacillus_subtilis Lactococcus_lactis Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/s4U_sp/s4U8_Ecoli_stats.txt
+s4U	8	L. lactis	python3 lmBuilder.py -m s4U -p 8 -o ./lm_dev/s4U_sp/s4U8_Llactis_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.01 --exclude_species Bacillus_subtilis Escherichia_coli Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/s4U_sp/s4U8_Llactis_stats.txt
+s4U	8	M. capricolum	python3 lmBuilder.py -m s4U -p 8 -o ./lm_dev/s4U_sp/s4U8_Mcapricolum_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.01 --exclude_species Bacillus_subtilis Lactococcus_lactis Escherichia_coli Streptomyces_griseus > ./lm_dev/s4U_sp/s4U8_Mcapricolum_stats.txt
+
+
+
+#########
+#Let's see if there is any signal in l. lactis (and S. griseus) D 17, since it is constitutive outside these species
+
+D	17	L. lactis	python3 lmBuilder.py -m D -p 17 -o ./lm_dev/D17_Llactis_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Escherichia_coli Mycoplasma_capricolum Streptomyces_griseus > ./lm_dev/D17_Llactis_stats.txt
+D	17	L. lactis and S. griseus	python3 lmBuilder.py -m D -p 17 -o ./lm_dev/D17_Llactis_Sgriseus_linear_model.txt -d ./data/top5_bact_gold-standard_Modomics.txt --rsquared_cutoff 0.1 --exclude_species Bacillus_subtilis Escherichia_coli Mycoplasma_capricolum > ./lm_dev/D17_Llactis_Sgriseus_stats.txt

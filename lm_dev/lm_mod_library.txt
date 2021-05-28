@@ -1,0 +1,26 @@
+linear_model	mod_short_name	sprinzl_position	unmodified_base	model_data	protein_hmm	probability_cutoff	comments
+lm	s4U	8	U	./lm_dev/s4U8_linear_model.txt	./tRNA-MAP.db/ThiI.hmm	
+#lm	Cm	13	C	./lm_dev/Cm13_linear_model.txt ./tRNA-MAP.db/	Positions 12 and 23 selected
+lm	D	16	U	./lm_dev/D16_Ecoli_linear_model.txt	./tRNA-MAP.db/DusC.hmm	Position 17 selected
+lm	D	17	U	./lm_dev/D17_linear_model.txt	./tRNA-MAP.db/DusB.hmm	All above R-squared 0.1 selected
+lm	Gm	18	G	./lm_dev/Gm13_Ecoli_linear_model.txt	./tRNA-MAP.db/TrmH.hmm	13 and 22 selected
+lm	D	20	U	./lm_dev/D20_linear_model.txt	./tRNA-MAP.db/DusA.hmm
+lm	D	20a	U	./lm_dev/D20a_linear_model.txt	./tRNA-MAP.db/DusA.hmm
+lm	m1A	22	A	./lm_dev/m1A22_linear_model.txt	./tRNA-MAP.db/TrmK.hmm	47, 46, 26, 13
+lm	I	34	A	./lm_dev/I34_linear_model.txt	./tRNA-MAP.db/TadA.hmm	35 selected
+#lm	ho5U	34	U	./lm_dev/ho5U34_linear_model.txt ./tRNA-MAP.db/TrhP.hmm	#Removed S griseus and M capricolum
+#lm	ho5U	34	U	./lm_dev/ho5U34_linear_model.txt ./tRNA-MAP.db/TrhO.hmm	#Removed S griseus and M capricolum
+lm	s2U	34	U	./lm_dev/s2U_linear_model.txt	./tRNA-MAP.db/MnmA.hmm	35 selected
+lm	mnm5U	34	U	./lm_dev/xnm5U34_linear_model.txt	./tRNA-MAP.db/MnmG.hmm	35 selected
+lm	QtRNA	34	G	./lm_dev/QtRNA34_linear_model.txt	./tRNA-MAP.db/QueA.hmm	35 selected
+lm	t6A	37	A	./lm_dev/t6A37_linear_model.txt	./tRNA-MAP.db/TsaD.hmm	36 selected
+lm	i6A	37	A	./lm_dev/i6A37_linear_model.txt ./tRNA-MAP.db/MiaA.hmm	36 selected
+#lm	ms2i6A	37	A	./lm_dev/ms2A37_linear_model.txt	./tRNA-MAP.db/MiaB.hmm
+lm	m2A	37	A	./lm_dev/m2A37_linear_mode.txt	./tRNA-MAP.db/RlmN.hmm	#36 selected
+lm	m1G	37	G	./lm_dev/m1G37_linear_model.txt ./tRNA-MAP.db/TrmD.hmm
+#lm	m6A	37	A	./lm_dev/m6A37_linear_model.txt	./tRNA-MAP.db/
+lm	Y	39	U	./lm_dev/Y39_linear_model.txt ./tRNA-MAP.db/TruA.hmm	#Used all sequences above 0.1 R-squared
+lm	m7G	46	G	./lm_dev/m7G46_linear_model.txt ./tRNA-MAP.db/TrmB.hmm	Used 9, 12, 13, 22, 23, 45, 47
+#lm	acp3U	47	U	./lm_dev/acp3U47_linear_model.txt	./tRNA-MAP.db/
+cs	T	54	U	./tRNA-MAP.db/TrmA.hmm
+cs	Y	55	U	./tRNA-MAP.db/TruB.hmm

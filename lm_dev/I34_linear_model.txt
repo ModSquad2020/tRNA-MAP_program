@@ -1,0 +1,8 @@
+seqName	I_34	35
+Bacillus_subtilis-tRNA-Arg-ACG-1	1	C
+Escherichia_coli-tRNA-Arg-ACG-1	1	C
+Lactococcus_lactis-tRNA-Arg-ACG-1	1	C
+Lactococcus_lactis-tRNA-Leu-AAG-1	0	A
+Mycoplasma_capricolum-tRNA-Arg-ACG-1	1	C
+Mycoplasma_capricolum-tRNA-Thr-AGT-1	0	G
+Streptomyces_griseus-tRNA-Arg-ACG-1	1	C
